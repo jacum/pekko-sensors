@@ -1,0 +1,7 @@
+*.class
+*.log
+/.bsp/
+target
+.idea
+.sbt.ivy.lock
+cache
