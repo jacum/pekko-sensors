@@ -7,7 +7,6 @@ import org.apache.pekko.persistence.PersistentActor
 import org.apache.pekko.util.Timeout
 import cats.effect.kernel.Temporal
 import cats.effect.{IO, Resource}
-import com.typesafe.scalalogging.LazyLogging
 import nl.pragmasoft.app.ResponderActor._
 import org.apache.pekko.sensors.actor.{ActorMetrics, PersistentActorMetrics}
 import org.http4s.{HttpRoutes, Response}
@@ -15,14 +14,16 @@ import org.http4s.dsl.io._
 import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.http4s.blaze.server.BlazeServerBuilder
 import org.http4s.server.{Router, Server}
+import org.typelevel.log4cats.SelfAwareStructuredLogger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.util.Random
 
-object ApiService extends LazyLogging {
+object ApiService {
+  private implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLoggerFromName[IO]("API")
 
-  def resource(socketAddress: InetSocketAddress, system: ActorSystem)(implicit cs: Temporal[IO], ec: ExecutionContext): Resource[IO, Server] = {
+  def of(socketAddress: InetSocketAddress, system: ActorSystem)(implicit cs: Temporal[IO]): Resource[IO, Server] = {
 
     def pingActor(event: Any, actor: ActorRef): IO[Response[IO]] = {
       val actorResponse = actor.ask(event)(Timeout.durationToTimeout(10 seconds))
@@ -35,29 +36,32 @@ object ApiService extends LazyLogging {
       }
     }
 
-    BlazeServerBuilder[IO]
-      .bindSocketAddress(socketAddress)
-      .withHttpApp(
-        Router("/api" -> HttpRoutes.of[IO] {
-              case GET -> Root / "health" => Ok()
+    for {
+      server <-
+        BlazeServerBuilder[IO]
+          .bindSocketAddress(socketAddress)
+          .withHttpApp(
+            Router("/api" -> HttpRoutes.of[IO] {
+                  case GET -> Root / "health" => Ok()
 
-              case POST -> Root / "ping-fj" / actorId / maxSleep =>
-                val actor = system.actorOf(Props(classOf[ResponderActor]), s"responder-fj-$actorId")
-                pingActor(Ping(maxSleep.toInt), actor)
+                  case POST -> Root / "ping" / actorId / maxSleep =>
+                    val actor = system.actorOf(Props(classOf[ResponderActor]), s"responder-default-$actorId")
+                    pingActor(Ping(maxSleep.toInt), actor)
 
-              case POST -> Root / "ping-tp" / actorId / maxSleep =>
-                val actor = system.actorOf(Props(classOf[ResponderActor]).withDispatcher("pekko.actor.default-blocking-io-dispatcher"), s"responder-tp-$actorId")
-                pingActor(Ping(maxSleep.toInt), actor)
+                  case POST -> Root / "ping-tp" / actorId / maxSleep =>
+                    val actor = system.actorOf(Props(classOf[ResponderActor]).withDispatcher("pekko.actor.default-blocking-io-dispatcher"), s"responder-tp-$actorId")
+                    pingActor(Ping(maxSleep.toInt), actor)
 
-              case POST -> Root / "ping-persistence" / actorId / maxSleep =>
-                val actor = system.actorOf(Props(classOf[PersistentResponderActor]), s"persistent-responder-$actorId")
-                pingActor(ValidCommand, actor)
+                  case POST -> Root / "ping-persistence" / actorId / maxSleep =>
+                    val actor = system.actorOf(Props(classOf[PersistentResponderActor]), s"persistent-responder-$actorId")
+                    pingActor(ValidCommand, actor)
 
-            }) orNotFound
-      )
-      .resource
+                }) orNotFound
+          )
+          .resource
+      _ <- logger.info("Metric service initialised").toResource
+    } yield server
   }
-
 }
 
 object ResponderActor {

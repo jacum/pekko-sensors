@@ -61,13 +61,14 @@ lazy val `app` = project
   .enablePlugins(JavaAppPackaging, DockerPlugin)
   .settings(commonSettings ++ noPublishSettings)
   .settings(
+    dockerBaseImage := "openjdk",
     moduleName := "app",
     Compile / mainClass := Some("nl.pragmasoft.app.Main"),
     Docker / version := Keys.version.value,
     dockerUpdateLatest := true,
-    libraryDependencies ++= App.deps :+ Cassandra.cassandraUnit
+    libraryDependencies ++= App.deps
   )
-  .dependsOn(sensors)
+  .dependsOn(sensors, `inmem-journal`)
 
 lazy val `root` = project
   .in(file("."))

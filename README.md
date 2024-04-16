@@ -1,14 +1,15 @@
-# Minimalist Pekko Observability
+# Pekko Observability 
+
 [![Build Status](https://dev.azure.com/pragmasoftnl/akka-sensors/_apis/build/status%2Fpekko-sensors-build?branchName=main)](https://dev.azure.com/pragmasoftnl/akka-sensors/_build/latest?definitionId=61&branchName=main)
 [![codecov.io](http://codecov.io/github/jacum/pekko-sensors/coverage.svg?branch=master)](https://codecov.io/gh/jacum/pekko-sensors?branch=master)
 [![Scala Steward badge](https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=)](https://scala-steward.org)
-![Maven Central](https://img.shields.io/maven-central/v/nl.pragmasoft.pekko/sensors˚-core_2.13?color=%2300AA00)
+![Maven Central](https://img.shields.io/maven-central/v/nl.pragmasoft.pekko/sensors_2.13?color=%2300AA00)
 
 **Non-intrusive native Prometheus collectors for Pekko internals, negligible performance overhead, suitable for production use.**
 
 - Are you running (or about to run) Pekko in production, full-throttle, and want to see what happens inside?  Did your load tests produce some ask timeouts? thread starvation? threads behaving non-reactively? old code doing nasty blocking I/O?
 
-- Can't use any of Akka native metric libraries (Kamon, Cinnamon)?
+- Likely, you can't really use any of Akka native metric libraries (Kamon, Cinnamon)?
 
 - Already familiar with Prometheus/Grafana observability stack?
 
@@ -80,7 +81,7 @@ docker-compose -f examples/observability/docker-compose.yml up
 
 Send some events:
 ```
-for z in {1..100}; do curl -X POST http://localhost:8080/api/ping-fj/$z/100; done
+for z in {1..100}; do curl -X POST http://localhost:8080/api/ping/$z/100; done
 for z in {101..200}; do curl -X POST http://localhost:8080/api/ping-tp/$z/100; done
 for z in {3001..3300}; do curl -X POST http://localhost:8080/api/ping-persistence/$z/300 ; done
 ```

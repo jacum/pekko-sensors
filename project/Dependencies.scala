@@ -1,6 +1,5 @@
 import sbt._
 
-//noinspection TypeAnnotation
 object Dependencies {
 
   object Logging {
@@ -60,22 +59,7 @@ object Dependencies {
   }
 
   object App {
-    val deps = Seq(
-        Cassandra.cassandraUnit
-      ) ++ Http4s.deps ++ Pekko.deps ++ Cassandra.deps ++ Logging.deps
-  }
-
-  object Cassandra {
-    val pekkoPersistenceCassandraVersion = "1.0.0"
-    val cassandraDriverVersion           = "4.17.0"
-
-    val cassandraDriverCore         = "com.datastax.oss"      % "java-driver-core"            % cassandraDriverVersion
-    val cassandraDriverQueryBuilder = "com.datastax.oss"      % "java-driver-query-builder"   % cassandraDriverVersion
-    val cassandraDriverMetrics      = "io.dropwizard.metrics" % "metrics-jmx"                 % "4.2.19"
-    val pekkoPersistenceCassandra   = "org.apache.pekko"     %% "pekko-persistence-cassandra" % pekkoPersistenceCassandraVersion
-    val cassandraUnit               = "org.cassandraunit"     % "cassandra-unit"              % "4.3.1.0"
-
-    val deps = Seq(pekkoPersistenceCassandra, cassandraDriverCore, cassandraDriverQueryBuilder, cassandraDriverMetrics)
+    val deps = Http4s.deps ++ Pekko.deps ++ Logging.deps
   }
 
   object TestTools {

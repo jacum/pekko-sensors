@@ -15,23 +15,20 @@ import org.http4s.blaze.server.BlazeServerBuilder
 import org.http4s.server.{Router, Server}
 import org.http4s._
 import org.typelevel.ci.CIStringSyntax
+import org.typelevel.log4cats.SelfAwareStructuredLogger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.io.Source
 
-object MetricService extends LazyLogging {
+object MetricService {
 
   val registry: CollectorRegistry = PekkoSensors.prometheusRegistry
   DefaultExports.register(registry)
 
-  try registry.register(new JmxCollector(Source.fromResource("prometheus-jmx-collector.yaml").mkString))
-  catch {
-    case e: Exception =>
-      logger.info(s"No prometheus-jmx-collector.yaml found in classpath, JMX export is not enabled: ${e.getMessage}")
-  }
+  def register(collector: Collector): Unit                   = registry.register(collector)
+  private implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLoggerFromName[IO]("API")
 
-  def register(collector: Collector): Unit = registry.register(collector)
-
-  def resource(socketAddress: InetSocketAddress)(implicit timer: Temporal[IO]): Resource[IO, Server] = {
+  def of(socketAddress: InetSocketAddress)(implicit timer: Temporal[IO]): Resource[IO, Server] = {
     val encoder = EntityEncoder.stringEncoder
 
     def exportMetrics: String = {
@@ -54,6 +51,7 @@ object MetricService extends LazyLogging {
             ) orNotFound
           )
           .resource
+      _ <- logger.info("Metric service initialised").toResource
     } yield server
   }
 
