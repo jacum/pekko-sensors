@@ -40,7 +40,7 @@ steps:
         gpg --list-keys
         gpg --list-secret-keys
 
-        git checkout master
+        git checkout main
         git config --global user.email "tim@@pragmasoft.nl"
         git config --global user.name "Azure Devops release pipeline"
 

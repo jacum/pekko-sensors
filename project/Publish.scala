@@ -51,7 +51,8 @@ object Publish {
           checkSnapshotDependencies,
           inquireVersions,
           runClean,
-//      runTest, // can't run test w/cross-version release
+          setReleaseVersion,
+      //      runTest, // can't run test w/cross-version release
           releaseStepCommandAndRemaining("+publishSigned"),
           releaseStepCommand("sonatypeBundleRelease")
         )
