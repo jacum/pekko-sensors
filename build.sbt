@@ -5,7 +5,7 @@ import sbt.file
 lazy val scala2 = "2.13.13"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-        organization := "nl.pragmasoft.sensors",
+        organization := "nl.pragmasoft.pekko",
         scalaVersion := scala2,
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
         Test / parallelExecution := false,
@@ -40,31 +40,31 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
-lazy val `pekko-inmem-journal` = project
-  .in(file("pekko-inmem-journal"))
-  .settings(commonSettings)
+lazy val `inmem-journal` = project
+  .in(file("inmem-journal"))
+  .settings(commonSettings ++ noPublishSettings)
   .settings(
     libraryDependencies ++= Pekko.inmemJournalDeps
   )
 
-lazy val `pekko-core` = project
-  .in(file("pekko-core"))
+lazy val `sensors-core` = project
+  .in(file("core"))
   .settings(commonSettings)
   .settings(
     moduleName := "pekko-core",
     libraryDependencies ++= Pekko.deps ++ Prometheus.deps ++ Logging.deps ++ TestTools.deps
   )
-  .dependsOn(`pekko-inmem-journal` % Test)
+  .dependsOn(`inmem-journal` % Test)
 
-lazy val `pekko-cassandra` = project
-  .in(file("pekko-cassandra"))
+lazy val `sensors-cassandra` = project
+  .in(file("sensors-cassandra"))
   .settings(commonSettings)
   .settings(
     moduleName := "sensors-cassandra",
     libraryDependencies ++= Pekko.deps ++ Prometheus.deps ++
             (Cassandra.deps :+ Cassandra.cassandraUnit % Test) ++ Logging.deps ++ TestTools.deps
   )
-  .dependsOn(`pekko-core`)
+  .dependsOn(`sensors-core`)
 
 lazy val `app` = project
   .in(file("examples/app"))
@@ -77,10 +77,10 @@ lazy val `app` = project
     dockerUpdateLatest := true,
     libraryDependencies ++= App.deps :+ Cassandra.cassandraUnit
   )
-  .dependsOn(`pekko-core`, `pekko-cassandra`)
+  .dependsOn(`sensors-core`, `sensors-cassandra`)
 
 lazy val `root` = project
   .in(file("."))
-  .aggregate(app, `pekko-core`, `pekko-cassandra`)
+  .aggregate(app, `sensors-core`, `sensors-cassandra`)
   .settings(commonSettings ++ noPublishSettings)
   .settings(name := "Pekko Sensors")
