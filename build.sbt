@@ -51,7 +51,6 @@ lazy val sensors = project
   .in(file("sensors"))
   .settings(commonSettings)
   .settings(
-    moduleName := "pekko-core",
     libraryDependencies ++= Pekko.deps ++ Prometheus.deps ++ Logging.deps ++ TestTools.deps
   )
   .dependsOn(`inmem-journal` % Test)
@@ -62,7 +61,6 @@ lazy val `app` = project
   .settings(commonSettings ++ noPublishSettings)
   .settings(
     dockerBaseImage := "openjdk",
-    moduleName := "app",
     Compile / mainClass := Some("nl.pragmasoft.app.Main"),
     Docker / version := Keys.version.value,
     dockerUpdateLatest := true,
