@@ -2,15 +2,13 @@
 [![Build Status](https://dev.azure.com/pragmasoftnl/akka-sensors/_apis/build/status%2Fpekko-sensors-build?branchName=main)](https://dev.azure.com/pragmasoftnl/akka-sensors/_build/latest?definitionId=61&branchName=main)
 [![codecov.io](http://codecov.io/github/jacum/pekko-sensors/coverage.svg?branch=master)](https://codecov.io/gh/jacum/pekko-sensors?branch=master)
 [![Scala Steward badge](https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=)](https://scala-steward.org)
-![Maven Central](https://img.shields.io/maven-central/v/nl.pragmasoft.sensors/pekko-core_2.13?color=%2300AA00)
+![Maven Central](https://img.shields.io/maven-central/v/nl.pragmasoft.pekko/sensors˚-core_2.13?color=%2300AA00)
 
 **Non-intrusive native Prometheus collectors for Pekko internals, negligible performance overhead, suitable for production use.**
 
-- Are you running (or about to run) Pekko in production, full-throttle, and want to see what happens inside?  Did your load tests produce some ask timeouts? thread starvation? threads behaving non-reactively? old code doing nasty blocking I/O? 
+- Are you running (or about to run) Pekko in production, full-throttle, and want to see what happens inside?  Did your load tests produce some ask timeouts? thread starvation? threads behaving non-reactively? old code doing nasty blocking I/O?
 
-- Would be nice to use Cinnamon Telemetry, but LightBend subscription is out of reach? 
-
-- Overhead created by Kamon doesn't look acceptable, especially when running full-throttle?
+- Can't use any of Akka native metric libraries (Kamon, Cinnamon)?
 
 - Already familiar with Prometheus/Grafana observability stack?
 
@@ -59,12 +57,6 @@ Dispatcher dashboard:
 ### Cluster
  - cluster events, per type/member (counter)
 
-### Cassandra
-Instrumented Cassandra session provider, exposing Cassandra client metrics collection.
- - requests
- - traffic in/out
- - timeouts
-
 ### Java Virtual Machine (from Prometheus default collectors)
 - number of instances
 - start since / uptime
@@ -78,7 +70,7 @@ We assuming you have `docker` and `docker-compose` up and running.
 
 Prepare sample app:
 ```
-sbt "compile; project app; docker:publishLocal"
+sbt "compile; project app; Docker/publishLocal"
 ```
 
 Start observability stack:
@@ -106,8 +98,7 @@ Sensors' bundled dashboards will be imported.
 ```
 libraryDependencies ++= 
   Seq(
-     "nl.pragmasoft.pekko" %% "sensors-cassandra" % "0.7.1"
-     "nl.pragmasoft.pekko" %% "sensors-core" % "0.7.1",
+     "nl.pragmasoft.pekko" %% "sensors" % "0.7.1",
   )
 ```
 
@@ -167,30 +158,23 @@ pekko {
 ### Using explicit/inline executor definition
 
 ```
-pekko {
- persistence {
-  cassandra {
-   default-dispatcher {
-        type = "org.apache.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
-        executor = "org.apache.pekko.sensors.dispatch.InstrumentedExecutor"
+  default-dispatcher {
+    type = "org.apache.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
+    executor = "org.apache.pekko.sensors.dispatch.InstrumentedExecutor"
 
-        instrumented-executor {
-          delegate = "fork-join-executor"
-          measure-runs = true
-          watch-long-runs = false
-        }
-
-        fork-join-executor {
-          parallelism-min = 6
-          parallelism-factor = 1
-          parallelism-max = 6
-        }
-      }
+    instrumented-executor {
+      delegate = "fork-join-executor"
+      measure-runs = true
+      watch-long-runs = false
     }
-  }
-}      
-```
 
+    fork-join-executor {
+      parallelism-min = 6
+      parallelism-factor = 1
+      parallelism-max = 6
+    }
+  }  
+```
 
 ### Actors (classic)
 
@@ -250,9 +234,3 @@ trait CustomActorMetrics extends ActorMetrics  with MetricsBuilders {
 }
 
 ```
-
-### Why codahale is used alongside Prometheus?
-
-We would prefer 100% Prometheus, however Cassandra Datastax OSS driver doesn't support Prometheus collectors.
-Prometheus is our preferred main metrics engine, hence we brigde metrics from Codahale via JMX.
-This won't be needed anymore if Prometheus would be supported natively by Datastax driver.

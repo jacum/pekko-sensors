@@ -13,7 +13,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper.startEmbeddedCassandra
 
 object Main extends IOApp with LazyLogging {
-  val cassandra = startEmbeddedCassandra("cassandra-server.yaml", "/tmp/cassandra")
 
   override def run(args: List[String]): IO[ExitCode] = {
     val config                                      = ConfigFactory.load()

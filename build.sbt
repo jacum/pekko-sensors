@@ -47,24 +47,14 @@ lazy val `inmem-journal` = project
     libraryDependencies ++= Pekko.inmemJournalDeps
   )
 
-lazy val `sensors-core` = project
-  .in(file("core"))
+lazy val sensors = project
+  .in(file("sensors"))
   .settings(commonSettings)
   .settings(
     moduleName := "pekko-core",
     libraryDependencies ++= Pekko.deps ++ Prometheus.deps ++ Logging.deps ++ TestTools.deps
   )
   .dependsOn(`inmem-journal` % Test)
-
-lazy val `sensors-cassandra` = project
-  .in(file("sensors-cassandra"))
-  .settings(commonSettings)
-  .settings(
-    moduleName := "sensors-cassandra",
-    libraryDependencies ++= Pekko.deps ++ Prometheus.deps ++
-            (Cassandra.deps :+ Cassandra.cassandraUnit % Test) ++ Logging.deps ++ TestTools.deps
-  )
-  .dependsOn(`sensors-core`)
 
 lazy val `app` = project
   .in(file("examples/app"))
@@ -77,10 +67,10 @@ lazy val `app` = project
     dockerUpdateLatest := true,
     libraryDependencies ++= App.deps :+ Cassandra.cassandraUnit
   )
-  .dependsOn(`sensors-core`, `sensors-cassandra`)
+  .dependsOn(sensors)
 
 lazy val `root` = project
   .in(file("."))
-  .aggregate(app, `sensors-core`, `sensors-cassandra`)
+  .aggregate(app, sensors)
   .settings(commonSettings ++ noPublishSettings)
   .settings(name := "Pekko Sensors")

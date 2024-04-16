@@ -6,8 +6,9 @@ object Dependencies {
   object Logging {
     val slf4jversion = "2.0.7"
     val slf4jApi     = "org.slf4j"                   % "slf4j-api"     % slf4jversion
+    val logback       = "ch.qos.logback" % "logback-classic" % "1.4.8"
     val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
-    val deps         = Seq(slf4jApi, scalaLogging)
+    val deps         = Seq(slf4jApi, scalaLogging, logback)
   }
 
   object Pekko {
@@ -39,9 +40,8 @@ object Dependencies {
     val hotspot   = "io.prometheus"     % "simpleclient_hotspot" % "0.16.0"
     val common    = "io.prometheus"     % "simpleclient_common"  % "0.16.0"
     val jmx       = "io.prometheus.jmx" % "collector"            % "0.17.1" exclude ("org.yaml", "snakeyaml")
-    val snakeYaml = "org.yaml"          % "snakeyaml"            % "2.0"
 
-    val deps = Seq(hotspot, common, jmx, snakeYaml)
+    val deps = Seq(hotspot, common, jmx)
   }
 
   object Http4s {
@@ -60,7 +60,6 @@ object Dependencies {
   }
 
   object App {
-
     val deps = Seq(
         Cassandra.cassandraUnit
       ) ++ Http4s.deps ++ Pekko.deps ++ Cassandra.deps ++ Logging.deps
@@ -80,9 +79,8 @@ object Dependencies {
   }
 
   object TestTools {
-    val log       = "ch.qos.logback" % "logback-classic" % "1.4.8"
     val scalaTest = "org.scalatest" %% "scalatest"       % "3.2.16"
-    val deps      = Logging.deps ++ testDeps(scalaTest, log)
+    val deps      = Logging.deps ++ testDeps(scalaTest)
   }
 
   def scopeDeps(scope: String, modules: Seq[ModuleID]) = modules.map(m => m % scope)
