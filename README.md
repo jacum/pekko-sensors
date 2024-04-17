@@ -9,7 +9,7 @@
 
 - Are you running (or about to run) Pekko in production, full-throttle, and want to see what happens inside?  Did your load tests produce some ask timeouts? thread starvation? threads behaving non-reactively? old code doing nasty blocking I/O?
 
-- Likely, you can't really use any of Akka native metric libraries (Kamon, Cinnamon)?
+- Can't use any of Akka native metric libraries (Kamon, Cinnamon)? 
 
 - Already familiar with Prometheus/Grafana observability stack?
 
@@ -21,7 +21,7 @@ If you answer 'yes' to most of the questions above, Pekko Sensors may be the rig
 
 - Won't affect CPU costs, when running in public cloud.
 
-- Easy Demo/Evaluation setup included: Pekko with Cassandra persistence, Prometheus server and Grafana dashboards.
+- Easy Demo/Evaluation setup included: Pekko example app, Prometheus server and Grafana dashboards.
 
 Actor dashboard:
 ![Actors](./docs/pekko-actors.png)
