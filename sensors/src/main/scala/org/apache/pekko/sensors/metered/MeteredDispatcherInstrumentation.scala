@@ -13,7 +13,7 @@ private[metered] trait MeteredDispatcherInstrumentation extends Dispatcher {
   protected def actorSystemName: String
   protected def metrics: DispatcherMetrics
 
-  private lazy val wrapper               = new DispatcherInstrumentationWrapper(configurator.config)
+  private lazy val wrapper               = new DispatcherInstrumentationWrapper(metrics, configurator.config)
   private val threadMXBean: ThreadMXBean = ManagementFactory.getThreadMXBean
   private val interestingStateNames      = Set("runnable", "waiting", "timed_waiting", "blocked")
   private val interestingStates          = Thread.State.values.filter(s => interestingStateNames.contains(s.name().toLowerCase))
