@@ -3,13 +3,12 @@ package org.apache.pekko.sensors.dispatch
 import java.lang.management.{ManagementFactory, ThreadInfo, ThreadMXBean}
 import java.util.concurrent._
 import java.util.concurrent.atomic.LongAdder
-
 import org.apache.pekko.dispatch._
 import org.apache.pekko.event.Logging.{Error, Warning}
 import DispatcherInstrumentationWrapper.Run
 import com.typesafe.config.Config
-import io.prometheus.client.{Gauge, Histogram}
-import org.apache.pekko.sensors.{MetricsBuilders, PekkoSensors, RunnableWatcher}
+import nl.pragmasoft.pekko.sensors.PekkoSensors
+import nl.pragmasoft.pekko.sensors.{MetricsBuilders, PekkoSensors, RunnableWatcher}
 
 import scala.PartialFunction.condOpt
 import scala.concurrent.duration.{Duration, FiniteDuration}
@@ -36,7 +35,7 @@ object PekkoRunnableWrapper {
 
 class DispatcherInstrumentationWrapper(config: Config) {
   import DispatcherInstrumentationWrapper._
-  import Helpers._
+  import nl.pragmasoft.pekko.sensors.dispatch.Helpers._
 
   private val executorConfig = config.getConfig("instrumented-executor")
 
@@ -263,7 +262,7 @@ trait InstrumentedDispatcher extends Dispatcher {
 
 class InstrumentedDispatcherConfigurator(config: Config, prerequisites: DispatcherPrerequisites) extends MessageDispatcherConfigurator(config, prerequisites) {
 
-  import Helpers._
+  import nl.pragmasoft.pekko.sensors.dispatch.Helpers._
 
   private val instance = new Dispatcher(
     this,
@@ -281,7 +280,7 @@ class InstrumentedDispatcherConfigurator(config: Config, prerequisites: Dispatch
 }
 
 class InstrumentedPinnedDispatcherConfigurator(config: Config, prerequisites: DispatcherPrerequisites) extends MessageDispatcherConfigurator(config, prerequisites) {
-  import Helpers._
+  import nl.pragmasoft.pekko.sensors.dispatch.Helpers._
 
   private val threadPoolConfig: ThreadPoolConfig = configureExecutor() match {
     case e: ThreadPoolExecutorConfigurator => e.threadPoolConfig
@@ -303,17 +302,4 @@ class InstrumentedPinnedDispatcherConfigurator(config: Config, prerequisites: Di
 
 }
 
-object Helpers {
 
-  /**
-   * INTERNAL API
-   */
-  private[pekko] implicit final class ConfigOps(val config: Config) extends AnyVal {
-    def getMillisDuration(path: String): FiniteDuration = getDuration(path, TimeUnit.MILLISECONDS)
-
-    def getNanosDuration(path: String): FiniteDuration = getDuration(path, TimeUnit.NANOSECONDS)
-
-    private def getDuration(path: String, unit: TimeUnit): FiniteDuration =
-      Duration(config.getDuration(path, unit), unit)
-  }
-}

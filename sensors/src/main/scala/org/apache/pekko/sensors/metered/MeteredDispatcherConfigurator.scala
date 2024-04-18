@@ -1,12 +1,11 @@
 package org.apache.pekko.sensors.metered
 
-import org.apache.pekko.dispatch.{Dispatcher, DispatcherPrerequisites, MessageDispatcher, MessageDispatcherConfigurator}
 import com.typesafe.config.Config
-import org.apache.pekko.sensors.DispatcherMetrics
-import org.apache.pekko.sensors.dispatch.Helpers
+import nl.pragmasoft.pekko.sensors.metered.MeteredDispatcherSetup
+import org.apache.pekko.dispatch.{DispatcherPrerequisites, MessageDispatcher, MessageDispatcherConfigurator}
 
 class MeteredDispatcherConfigurator(config: Config, prerequisites: DispatcherPrerequisites) extends MessageDispatcherConfigurator(config, prerequisites) {
-  import Helpers._
+  import org.apache.pekko.util.Helpers._
 
   private val instance: MessageDispatcher = {
     val _metrics = MeteredDispatcherSetup.setupOrThrow(prerequisites).metrics

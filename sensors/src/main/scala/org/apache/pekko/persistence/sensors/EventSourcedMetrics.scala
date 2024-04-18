@@ -8,9 +8,10 @@ import org.apache.pekko.actor.typed.{Behavior, BehaviorInterceptor, ExtensibleBe
 import org.apache.pekko.persistence.typed.internal.{CompositeEffect, EventSourcedBehaviorImpl, Persist, PersistAll}
 import org.apache.pekko.persistence.typed.scaladsl.{EffectBuilder, EventSourcedBehavior}
 import org.apache.pekko.persistence.{JournalProtocol => P}
-import org.apache.pekko.sensors.MetricOps._
+import nl.pragmasoft.pekko.sensors.MetricOps._
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.pekko.sensors.{ClassNameUtil, PekkoSensorsExtension, SensorMetrics}
+import nl.pragmasoft.pekko.sensors.{ClassNameUtil, SensorMetrics}
+import nl.pragmasoft.pekko.sensors.{ClassNameUtil, PekkoSensorsExtension, SensorMetrics}
 
 import scala.annotation.tailrec
 import scala.reflect.ClassTag

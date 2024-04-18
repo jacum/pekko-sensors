@@ -2,7 +2,9 @@ package org.apache.pekko.sensors.metered
 
 import org.apache.pekko.dispatch.{Dispatcher, Mailbox}
 import org.apache.pekko.event.Logging.Error
-import org.apache.pekko.sensors.{DispatcherMetrics, PekkoSensors}
+import nl.pragmasoft.pekko.sensors.PekkoSensors
+import org.apache.pekko.sensors.DispatcherMetrics
+import org.apache.pekko.sensors.dispatch.DispatcherInstrumentationWrapper
 
 import java.lang.management.{ManagementFactory, ThreadMXBean}
 import java.util.concurrent.RejectedExecutionException
@@ -11,7 +13,7 @@ private[metered] trait MeteredDispatcherInstrumentation extends Dispatcher {
   protected def actorSystemName: String
   protected def metrics: DispatcherMetrics
 
-  private lazy val wrapper               = new DispatcherInstrumentationWrapper(metrics, configurator.config)
+  private lazy val wrapper               = new DispatcherInstrumentationWrapper(configurator.config)
   private val threadMXBean: ThreadMXBean = ManagementFactory.getThreadMXBean
   private val interestingStateNames      = Set("runnable", "waiting", "timed_waiting", "blocked")
   private val interestingStates          = Thread.State.values.filter(s => interestingStateNames.contains(s.name().toLowerCase))

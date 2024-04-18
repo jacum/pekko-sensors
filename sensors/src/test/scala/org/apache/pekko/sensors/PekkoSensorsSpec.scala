@@ -13,8 +13,9 @@ import org.apache.pekko.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
+import nl.pragmasoft.pekko.sensors.PekkoSensors
+import nl.pragmasoft.pekko.sensors.behavior.BehaviorMetrics
 import org.apache.pekko.sensors.actor.{ActorMetrics, PersistentActorMetrics}
-import org.apache.pekko.sensors.behavior.BehaviorMetrics
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.Eventually
 import org.scalatest.freespec.AnyFreeSpec
