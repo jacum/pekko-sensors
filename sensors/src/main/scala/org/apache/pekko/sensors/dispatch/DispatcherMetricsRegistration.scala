@@ -1,7 +1,8 @@
 package org.apache.pekko.sensors.dispatch
 
 import io.prometheus.client.{Gauge, Histogram}
-import org.apache.pekko.sensors.{DispatcherMetrics, MetricsBuilders}
+import nl.pragmasoft.pekko.sensors.MetricsBuilders
+import org.apache.pekko.sensors.DispatcherMetrics
 
 /** Creates and registers Dispatcher metrics in the global registry */
 private[dispatch] object DispatcherMetricsRegistration extends MetricsBuilders {

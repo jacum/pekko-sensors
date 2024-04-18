@@ -1,16 +1,15 @@
 package org.apache.pekko.sensors.actor
 
+import nl.pragmasoft.pekko.sensors.{ClassNameUtil, PekkoSensorsExtension}
 import org.apache.pekko.actor.{Actor, ActorContext, ActorLogging, ActorRef, ReceiveTimeout}
 import org.apache.pekko.persistence.{PersistentActor, RecoveryCompleted}
-import org.apache.pekko.sensors.{ClassNameUtil, PekkoSensorsExtension}
 
 import scala.collection.immutable
 import scala.util.control.NonFatal
-import org.apache.pekko.sensors.MetricOps._
+import nl.pragmasoft.pekko.sensors.MetricOps._
 
 trait ActorMetrics extends Actor with ActorLogging {
   self: Actor =>
-  import org.apache.pekko.sensors.MetricOps._
 
   protected def actorLabel: String = ClassNameUtil.simpleName(this.getClass)
 
@@ -65,7 +64,6 @@ trait ActorMetrics extends Actor with ActorLogging {
 }
 
 trait PersistentActorMetrics extends ActorMetrics with PersistentActor {
-  import org.apache.pekko.sensors.MetricOps._
 
   // normally we don't need to watch internal pekko persistence messages
   protected override def messageLabel(value: Any): Option[String] =

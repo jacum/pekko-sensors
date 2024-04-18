@@ -7,7 +7,7 @@
     </appender>
 
     <logger name="org.apache.pekko.persistence.typed.internal.EventSourcedBehaviorImpl" level="WARN"/>
-    <logger name="org.apache.pekko.sensors.InstrumentedActors" level="WARN"/>
+    <logger name="nl.pragmasoft.pekko.sensors.InstrumentedActors" level="WARN"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />

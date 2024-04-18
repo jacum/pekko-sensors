@@ -150,7 +150,7 @@ pekko {
   }
 
   extensions = [
-    org.apache.pekko.sensors.PekkoSensorsExtension
+    nl.pragmasoft.pekko.sensors.PekkoSensorsExtension
   ]
 }
 

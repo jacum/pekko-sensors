@@ -3,12 +3,10 @@ package nl.pragmasoft.app
 import java.io.CharArrayWriter
 import java.net.InetSocketAddress
 import cats.effect.{IO, Resource, Temporal}
-import com.typesafe.scalalogging.LazyLogging
 import io.prometheus.client.exporter.common.TextFormat
 import io.prometheus.client.hotspot._
 import io.prometheus.client.{Collector, CollectorRegistry}
-import io.prometheus.jmx.JmxCollector
-import org.apache.pekko.sensors.PekkoSensors
+import nl.pragmasoft.pekko.sensors.PekkoSensors
 import org.http4s.dsl.io._
 import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.http4s.blaze.server.BlazeServerBuilder
