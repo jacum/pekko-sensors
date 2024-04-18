@@ -9,8 +9,8 @@ import org.apache.pekko.sensors.dispatch.RunnableWrapper
 import java.util.concurrent.atomic.LongAdder
 import scala.concurrent.duration.Duration
 
-private[metered] class DispatcherInstrumentationWrapper(metrics: DispatcherMetrics, config: Config) {
-  import DispatcherInstrumentationWrapper._
+class MeteredDispatcherWrapper(metrics: DispatcherMetrics, config: Config) {
+  import MeteredDispatcherWrapper._
   import nl.pragmasoft.pekko.sensors.dispatch.Helpers._
 
   private val executorConfig = config.getConfig("instrumented-executor")
@@ -35,7 +35,7 @@ private[metered] class DispatcherInstrumentationWrapper(metrics: DispatcherMetri
     execute(RunnableWrapper(runnable, run))
   }
 }
-private[metered] object DispatcherInstrumentationWrapper {
+private[metered] object MeteredDispatcherWrapper {
   def meteredRun(metrics: DispatcherMetrics, id: String): InstrumentedRun = {
     val currentWorkers = new LongAdder
     val queue          = metrics.queueTime.labels(id)
