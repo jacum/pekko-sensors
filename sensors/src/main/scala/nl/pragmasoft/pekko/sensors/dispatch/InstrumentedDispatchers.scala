@@ -1,37 +1,16 @@
-package org.apache.pekko.sensors.dispatch
+package nl.pragmasoft.pekko.sensors.dispatch
 
-import java.lang.management.{ManagementFactory, ThreadInfo, ThreadMXBean}
 import java.util.concurrent._
 import java.util.concurrent.atomic.LongAdder
 import org.apache.pekko.dispatch._
-import org.apache.pekko.event.Logging.{Error, Warning}
+import org.apache.pekko.event.Logging.Warning
+import org.apache.pekko.sensors.dispatch.{DispatcherMetricsRegistration, InstrumentedDispatcherBase, PekkoRunnableWrapper, ScalaRunnableWrapper}
 import DispatcherInstrumentationWrapper.Run
 import com.typesafe.config.Config
 import nl.pragmasoft.pekko.sensors.PekkoSensors
-import nl.pragmasoft.pekko.sensors.{MetricsBuilders, PekkoSensors, RunnableWatcher}
+import nl.pragmasoft.pekko.sensors.RunnableWatcher
 
-import scala.PartialFunction.condOpt
-import scala.concurrent.duration.{Duration, FiniteDuration}
-
-object PekkoRunnableWrapper {
-  def unapply(runnable: Runnable): Option[Run => Runnable] =
-    condOpt(runnable) {
-      case runnable: Batchable => new BatchableWrapper(runnable, _)
-      case runnable: Mailbox   => new MailboxWrapper(runnable, _)
-    }
-
-  class BatchableWrapper(self: Batchable, r: Run) extends Batchable {
-    def run(): Unit          = r(() => self.run())
-    def isBatchable: Boolean = self.isBatchable
-  }
-
-  class MailboxWrapper(self: Mailbox, r: Run) extends ForkJoinTask[Unit] with Runnable {
-    def getRawResult: Unit          = self.getRawResult()
-    def setRawResult(v: Unit): Unit = self.setRawResult(v)
-    def exec(): Boolean             = r(() => self.exec())
-    def run(): Unit = { exec(); () }
-  }
-}
+import scala.concurrent.duration.Duration
 
 class DispatcherInstrumentationWrapper(config: Config) {
   import DispatcherInstrumentationWrapper._
@@ -205,60 +184,7 @@ class InstrumentedExecutor(val config: Config, val prerequisites: DispatcherPrer
 
 }
 
-trait InstrumentedDispatcher extends Dispatcher {
-
-  def actorSystemName: String
-  private lazy val wrapper = new DispatcherInstrumentationWrapper(configurator.config)
-
-  private val threadMXBean: ThreadMXBean = ManagementFactory.getThreadMXBean
-  private val interestingStateNames      = Set("runnable", "waiting", "timed_waiting", "blocked")
-  private val interestingStates          = Thread.State.values.filter(s => interestingStateNames.contains(s.name().toLowerCase))
-
-  PekkoSensors.schedule(
-    s"$id-states",
-    () => {
-      val threads = threadMXBean
-        .getThreadInfo(threadMXBean.getAllThreadIds, 0)
-        .filter(t =>
-          t != null
-            && t.getThreadName.startsWith(s"$actorSystemName-$id")
-        )
-
-      interestingStates foreach { state =>
-        val stateLabel = state.toString.toLowerCase
-        DispatcherMetricsRegistration.threadStates
-          .labels(id, stateLabel)
-          .set(threads.count(_.getThreadState.name().equalsIgnoreCase(stateLabel)))
-      }
-      DispatcherMetricsRegistration.threads
-        .labels(id)
-        .set(threads.length)
-    }
-  )
-
-  override def execute(runnable: Runnable): Unit = wrapper(runnable, super.execute)
-
-  protected[pekko] override def registerForExecution(mbox: Mailbox, hasMessageHint: Boolean, hasSystemMessageHint: Boolean): Boolean =
-    if (mbox.canBeScheduledForExecution(hasMessageHint, hasSystemMessageHint))
-      if (mbox.setAsScheduled())
-        try {
-          wrapper(mbox, executorService.execute)
-          true
-        } catch {
-          case _: RejectedExecutionException =>
-            try {
-              wrapper(mbox, executorService.execute)
-              true
-            } catch { //Retry once
-              case e: RejectedExecutionException =>
-                mbox.setAsIdle()
-                eventStream.publish(Error(e, getClass.getName, getClass, "registerForExecution was rejected twice!"))
-                throw e
-            }
-        }
-      else false
-    else false
-}
+trait InstrumentedDispatcher extends InstrumentedDispatcherBase
 
 class InstrumentedDispatcherConfigurator(config: Config, prerequisites: DispatcherPrerequisites) extends MessageDispatcherConfigurator(config, prerequisites) {
 
