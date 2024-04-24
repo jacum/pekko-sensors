@@ -818,7 +818,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Unhahdled messages rate",
+      "title": "Unhandled messages rate",
       "tooltip": {
         "msResolution": false,
         "shared": true,
