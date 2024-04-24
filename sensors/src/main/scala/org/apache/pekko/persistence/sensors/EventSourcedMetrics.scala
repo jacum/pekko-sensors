@@ -11,7 +11,6 @@ import org.apache.pekko.persistence.{JournalProtocol => P}
 import nl.pragmasoft.pekko.sensors.MetricOps._
 import com.typesafe.scalalogging.LazyLogging
 import nl.pragmasoft.pekko.sensors.{ClassNameUtil, SensorMetrics}
-import nl.pragmasoft.pekko.sensors.{ClassNameUtil, PekkoSensorsExtension, SensorMetrics}
 
 import scala.annotation.tailrec
 import scala.reflect.ClassTag

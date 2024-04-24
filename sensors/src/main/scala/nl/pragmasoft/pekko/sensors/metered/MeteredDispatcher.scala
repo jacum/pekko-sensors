@@ -1,7 +1,8 @@
-package org.apache.pekko.sensors.metered
+package nl.pragmasoft.pekko.sensors.metered
 
+import nl.pragmasoft.pekko.sensors.DispatcherMetrics
 import org.apache.pekko.dispatch.Dispatcher
-import org.apache.pekko.sensors.DispatcherMetrics
+import org.apache.pekko.sensors.metered.MeteredDispatcherInstrumentation
 
 class MeteredDispatcher(settings: MeteredDispatcherSettings)
     extends Dispatcher(

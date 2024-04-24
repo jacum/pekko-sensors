@@ -1,18 +1,18 @@
-package org.apache.pekko.sensors.metered
+package org.apache.pekko.sensors.dispatch
 
+import nl.pragmasoft.pekko.sensors.PekkoSensors
+import nl.pragmasoft.pekko.sensors.dispatch.{DispatcherInstrumentationWrapper, DispatcherMetricsRegistration}
 import org.apache.pekko.dispatch.{Dispatcher, Mailbox}
 import org.apache.pekko.event.Logging.Error
-import nl.pragmasoft.pekko.sensors.{DispatcherMetrics, PekkoSensors}
-import nl.pragmasoft.pekko.sensors.metered.MeteredDispatcherWrapper
 
 import java.lang.management.{ManagementFactory, ThreadMXBean}
 import java.util.concurrent.RejectedExecutionException
 
-trait MeteredDispatcherInstrumentation extends Dispatcher {
-  protected def actorSystemName: String
-  protected def metrics: DispatcherMetrics
+trait InstrumentedDispatcherBase extends Dispatcher {
 
-  private lazy val wrapper               = new MeteredDispatcherWrapper(metrics, configurator.config)
+  def actorSystemName: String
+  private lazy val wrapper = new DispatcherInstrumentationWrapper(configurator.config)
+
   private val threadMXBean: ThreadMXBean = ManagementFactory.getThreadMXBean
   private val interestingStateNames      = Set("runnable", "waiting", "timed_waiting", "blocked")
   private val interestingStates          = Thread.State.values.filter(s => interestingStateNames.contains(s.name().toLowerCase))
@@ -29,11 +29,11 @@ trait MeteredDispatcherInstrumentation extends Dispatcher {
 
       interestingStates foreach { state =>
         val stateLabel = state.toString.toLowerCase
-        metrics.threadStates
+        DispatcherMetricsRegistration.threadStates
           .labels(id, stateLabel)
           .set(threads.count(_.getThreadState.name().equalsIgnoreCase(stateLabel)))
       }
-      metrics.threads
+      DispatcherMetricsRegistration.threads
         .labels(id)
         .set(threads.length)
     }

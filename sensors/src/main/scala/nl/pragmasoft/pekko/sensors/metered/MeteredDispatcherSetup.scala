@@ -1,8 +1,8 @@
 package nl.pragmasoft.pekko.sensors.metered
 
+import nl.pragmasoft.pekko.sensors.DispatcherMetrics
 import org.apache.pekko.actor.setup.Setup
 import org.apache.pekko.dispatch.DispatcherPrerequisites
-import org.apache.pekko.sensors.DispatcherMetrics
 
 final case class MeteredDispatcherSetup(metrics: DispatcherMetrics) extends Setup
 

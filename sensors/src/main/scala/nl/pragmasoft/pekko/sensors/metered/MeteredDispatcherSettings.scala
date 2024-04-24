@@ -1,12 +1,11 @@
-package org.apache.pekko.sensors.metered
+package nl.pragmasoft.pekko.sensors.metered
 
-import org.apache.pekko.dispatch.MessageDispatcherConfigurator
+import nl.pragmasoft.pekko.sensors.DispatcherMetrics
+import org.apache.pekko.dispatch.{ExecutorServiceFactoryProvider, MessageDispatcherConfigurator}
 
 import scala.concurrent.duration._
-import org.apache.pekko.dispatch.ExecutorServiceFactoryProvider
-import org.apache.pekko.sensors.DispatcherMetrics
 
-private[metered] case class MeteredDispatcherSettings(
+case class MeteredDispatcherSettings(
   name: String,
   metrics: DispatcherMetrics,
   _configurator: MessageDispatcherConfigurator,

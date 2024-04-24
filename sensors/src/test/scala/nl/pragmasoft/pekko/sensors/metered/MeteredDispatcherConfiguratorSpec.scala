@@ -7,8 +7,7 @@ import org.apache.pekko.actor.typed.{ActorSystem, DispatcherSelector, SpawnProto
 import nl.pragmasoft.pekko.sensors.MetricsTestUtils._
 import MeteredDispatcherConfiguratorSpec._
 import com.typesafe.config.ConfigFactory
-import org.apache.pekko.sensors.DispatcherMetrics
-import org.apache.pekko.sensors.metered.MeteredDispatcher
+import nl.pragmasoft.pekko.sensors.DispatcherMetrics
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -41,7 +40,7 @@ object MeteredDispatcherConfiguratorSpec {
   private val cfgStr =
     """
       |pekko.actor.default-dispatcher {
-      |  type = "org.apache.pekko.sensors.metered.MeteredDispatcherConfigurator"
+      |  type = "nl.pragmasoft.pekko.sensors.metered.MeteredDispatcherConfigurator"
       |  instrumented-executor {
       |    delegate = "java.util.concurrent.ForkJoinPool"
       |    measure-runs = false

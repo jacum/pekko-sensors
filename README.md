@@ -123,8 +123,8 @@ pekko {
     # main/global/default dispatcher
 
     default-dispatcher {
-      type = "org.apache.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
-      executor = "org.apache.pekko.sensors.dispatch.InstrumentedExecutor"
+      type = "nl.pragmasoft.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
+      executor = "nl.pragmasoft.pekko.sensors.dispatch.InstrumentedExecutor"
 
       instrumented-executor {
         delegate = "fork-join-executor" 
@@ -138,8 +138,8 @@ pekko {
     # some other dispatcher used in your app
 
     default-blocking-io-dispatcher {
-      type = "org.apache.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
-      executor = "org.apache.pekko.sensors.dispatch.InstrumentedExecutor"
+      type = "nl.pragmasoft.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
+      executor = "nl.pragmasoft.pekko.sensors.dispatch.InstrumentedExecutor"
 
       instrumented-executor {
         delegate = "thread-pool-executor"
@@ -160,8 +160,8 @@ pekko {
 
 ```
   default-dispatcher {
-    type = "org.apache.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
-    executor = "org.apache.pekko.sensors.dispatch.InstrumentedExecutor"
+    type = "nl.pragmasoft.pekko.sensors.dispatch.InstrumentedDispatcherConfigurator"
+    executor = "nl.pragmasoft.pekko.sensors.dispatch.InstrumentedExecutor"
 
     instrumented-executor {
       delegate = "fork-join-executor"

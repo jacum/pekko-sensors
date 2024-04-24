@@ -1,12 +1,12 @@
 package org.apache.pekko.sensors.actor
 
 import nl.pragmasoft.pekko.sensors.{ClassNameUtil, PekkoSensorsExtension}
-import org.apache.pekko.actor.{Actor, ActorContext, ActorLogging, ActorRef, ReceiveTimeout}
-import org.apache.pekko.persistence.{PersistentActor, RecoveryCompleted}
+import org.apache.pekko.actor.{Actor, ActorLogging, ReceiveTimeout}
+import org.apache.pekko.persistence.PersistentActor
+import nl.pragmasoft.pekko.sensors.MetricOps._
 
 import scala.collection.immutable
 import scala.util.control.NonFatal
-import nl.pragmasoft.pekko.sensors.MetricOps._
 
 trait ActorMetrics extends Actor with ActorLogging {
   self: Actor =>

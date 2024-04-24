@@ -10,9 +10,8 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.jdk.CollectionConverters._
 import MeteredLogicSpec._
-import nl.pragmasoft.pekko.sensors.metered.MeteredDispatcherSetup
+import nl.pragmasoft.pekko.sensors.DispatcherMetrics
 import org.apache.pekko.actor.setup.ActorSystemSetup
-import org.apache.pekko.sensors.DispatcherMetrics
 
 /**
  * This spec contains checks for metrics gathering implemented in .metered package.
@@ -63,7 +62,7 @@ object MeteredLogicSpec {
   private val cfgStr =
     """
       |our-test-dispatcher {
-      |  type = "org.apache.pekko.sensors.metered.MeteredDispatcherConfigurator"
+      |  type = "nl.pragmasoft.pekko.sensors.metered.MeteredDispatcherConfigurator"
       |  instrumented-executor {
       |    delegate = "java.util.concurrent.ForkJoinPool"
       |    measure-runs = true
