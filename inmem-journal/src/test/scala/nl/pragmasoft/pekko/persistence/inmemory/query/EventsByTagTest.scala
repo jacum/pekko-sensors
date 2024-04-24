@@ -31,16 +31,16 @@ class EventsByTagTest extends QueryTestSpec {
       tp.expectNoMessage(NoMsgTime)
 
       persist(1, 1, "my-1", "one") // 1
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNoMessage(NoMsgTime)
 
       persist(1, 1, "my-2", "one") // 2
 
-      tp.expectNext(EventEnvelope(Sequence(2), "my-2", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-2", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNoMessage(NoMsgTime)
 
       persist(1, 1, "my-3", "one") // 3
-      tp.expectNext(EventEnvelope(Sequence(3), "my-3", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-3", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNoMessage(NoMsgTime)
 
       persist(2, 2, "my-1", "two") // 4
@@ -78,9 +78,9 @@ class EventsByTagTest extends QueryTestSpec {
 
     withEventsByTag()("number", Sequence(0)) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(2), "my-2", 1, "a-1" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(3), "my-3", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-2", 1, "a-1", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-3", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNoMessage(NoMsgTime)
 
       persist(2, 2, "my-1", "number") // 4
@@ -109,7 +109,7 @@ class EventsByTagTest extends QueryTestSpec {
 
     withCurrentEventsByTag()("number", Sequence(0)) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
@@ -120,7 +120,7 @@ class EventsByTagTest extends QueryTestSpec {
 
     withCurrentEventsByTag()("number", Sequence(0)) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
@@ -131,7 +131,7 @@ class EventsByTagTest extends QueryTestSpec {
 
     withCurrentEventsByTag()("number", Sequence(0)) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
@@ -142,7 +142,7 @@ class EventsByTagTest extends QueryTestSpec {
 
     withCurrentEventsByTag()("number", Sequence(0)) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
@@ -153,7 +153,7 @@ class EventsByTagTest extends QueryTestSpec {
 
     withCurrentEventsByTag()("number", Sequence(0)) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
@@ -161,4 +161,3 @@ class EventsByTagTest extends QueryTestSpec {
     }
   }
 }
-

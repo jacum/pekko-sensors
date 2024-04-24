@@ -1,7 +1,7 @@
 package nl.pragmasoft.pekko.persistence.inmemory.extension
 
-import org.apache.pekko.actor.{ ActorRef, ExtendedActorSystem, Props }
-import org.apache.pekko.serialization.{ Serialization, SerializationExtension }
+import org.apache.pekko.actor.{ActorRef, ExtendedActorSystem, Props}
+import org.apache.pekko.serialization.{Serialization, SerializationExtension}
 import com.typesafe.config.Config
 
 class StorageExtensionImpl()(implicit val system: ExtendedActorSystem) extends StorageExtension with ActorSingletonSupport {

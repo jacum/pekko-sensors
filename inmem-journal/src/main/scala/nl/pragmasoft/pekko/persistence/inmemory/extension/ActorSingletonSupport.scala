@@ -1,13 +1,13 @@
 package nl.pragmasoft.pekko.persistence.inmemory.extension
 
-import org.apache.pekko.actor.{ ActorRef, ExtendedActorSystem, Props }
+import org.apache.pekko.actor.{ActorRef, ExtendedActorSystem, Props}
 
 import scala.collection.mutable
 
 private[extension] trait ActorSingletonSupport {
   private val existingActors: mutable.Map[String, ActorRef] = mutable.Map.empty
 
-  final def localNonClusteredActorSingleton(system: ExtendedActorSystem, props: Props, actorName: String): ActorRef = {
+  final def localNonClusteredActorSingleton(system: ExtendedActorSystem, props: Props, actorName: String): ActorRef =
     existingActors.get(actorName) match {
       case Some(a) => a
       case None =>
@@ -21,6 +21,5 @@ private[extension] trait ActorSingletonSupport {
           }
         }
     }
-  }
 
 }

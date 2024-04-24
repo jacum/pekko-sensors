@@ -1,7 +1,7 @@
 package org.apache.pekko.sensors.dispatch
 
 import org.apache.pekko.dispatch.Batchable
-import DispatcherInstrumentationWrapper.Run
+import nl.pragmasoft.pekko.sensors.dispatch.DispatcherInstrumentationWrapper.Run
 
 import scala.PartialFunction.condOpt
 

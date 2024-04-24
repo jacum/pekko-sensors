@@ -17,15 +17,15 @@
 package nl.pragmasoft.pekko.persistence.inmemory.util
 
 import java.io.InputStream
-import javax.xml.stream.{ XMLInputFactory, XMLEventReader }
+import javax.xml.stream.{XMLEventReader, XMLInputFactory}
 
 import org.apache.pekko.NotUsed
 import org.apache.pekko.stream.IOResult
-import org.apache.pekko.stream.scaladsl.{ Source, StreamConverters }
+import org.apache.pekko.stream.scaladsl.{Source, StreamConverters}
 import org.apache.pekko.util.ByteString
 
 import scala.concurrent.Future
-import scala.io.{ Source => ScalaIOSource }
+import scala.io.{Source => ScalaIOSource}
 import scala.util.Try
 
 object ClasspathResources extends ClasspathResources
@@ -33,23 +33,28 @@ object ClasspathResources extends ClasspathResources
 trait ClasspathResources {
   def withInputStream[T](fileName: String)(f: InputStream => T): T = {
     val is = fromClasspathAsStream(fileName)
-    try f(is) finally Try(is.close())
+    try f(is)
+    finally Try(is.close())
   }
 
   def withXMLEventReader[T](fileName: String)(f: XMLEventReader => T): T =
     withInputStream(fileName) { is =>
       val factory = XMLInputFactory.newInstance()
-      val reader = factory.createXMLEventReader(is)
+      val reader  = factory.createXMLEventReader(is)
       f(reader)
     }
 
   def withXMLEventSource[T](fileName: String)(f: Source[javax.xml.stream.events.XMLEvent, NotUsed] => T): T =
     withXMLEventReader(fileName) { reader =>
-      f(Source.fromIterator(() => new Iterator[javax.xml.stream.events.XMLEvent] {
-        override def hasNext: Boolean = reader.hasNext
+      f(
+        Source.fromIterator(() =>
+          new Iterator[javax.xml.stream.events.XMLEvent] {
+            override def hasNext: Boolean = reader.hasNext
 
-        override def next(): javax.xml.stream.events.XMLEvent = reader.nextEvent()
-      }))
+            override def next(): javax.xml.stream.events.XMLEvent = reader.nextEvent()
+          }
+        )
+      )
     }
 
   def withByteStringSource[T](fileName: String)(f: Source[ByteString, Future[IOResult]] => T): T =

@@ -154,9 +154,9 @@ class EventsByTag2UUIDJournalTest extends QueryTestSpec("uuid-offset-mode.conf")
 
     withEventsByTag2()("number", Sequence(0)) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(2), "my-2", 1, "a-1" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(3), "my-3", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-2", 1, "a-1", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-3", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNoMessage(NoMsgTime)
 
       persist(2, 2, "my-1", "number") // 4
@@ -178,4 +178,3 @@ class EventsByTag2UUIDJournalTest extends QueryTestSpec("uuid-offset-mode.conf")
     }
   }
 }
-

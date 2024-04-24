@@ -25,7 +25,7 @@ import scala.concurrent.duration._
 
 @Ignore
 class InMemoryJournalPerfSpec extends JournalPerfSpec(ConfigFactory.load("application.conf")) {
-  override protected def supportsRejectingNonSerializableObjects: CapabilityFlag = true
+  protected override def supportsRejectingNonSerializableObjects: CapabilityFlag = true
 
   override def awaitDurationMillis: Long = 60.minutes.toMillis
 }

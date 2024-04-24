@@ -18,8 +18,8 @@ package nl.pragmasoft.pekko.persistence.inmemory.journal
 
 import org.apache.pekko.persistence.CapabilityFlag
 import org.apache.pekko.persistence.journal.JournalSpec
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 
 class InMemoryJournalSpec extends JournalSpec(ConfigFactory.load("application.conf")) {
-  override protected def supportsRejectingNonSerializableObjects: CapabilityFlag = true
+  protected override def supportsRejectingNonSerializableObjects: CapabilityFlag = true
 }

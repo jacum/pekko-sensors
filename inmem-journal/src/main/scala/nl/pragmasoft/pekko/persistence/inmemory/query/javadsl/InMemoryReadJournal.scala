@@ -16,23 +16,24 @@
 
 package nl.pragmasoft.pekko.persistence.inmemory.query.javadsl
 
-import nl.pragmasoft.pekko.persistence.inmemory.query.scaladsl.{ InMemoryReadJournal => ScalaInMemoryReadJournal }
+import nl.pragmasoft.pekko.persistence.inmemory.query.scaladsl.{InMemoryReadJournal => ScalaInMemoryReadJournal}
 import org.apache.pekko.NotUsed
 import org.apache.pekko.persistence.query.javadsl._
-import org.apache.pekko.persistence.query.{ EventEnvelope, Offset }
+import org.apache.pekko.persistence.query.{EventEnvelope, Offset}
 import org.apache.pekko.stream.javadsl.Source
 
 object InMemoryReadJournal {
   final val Identifier = ScalaInMemoryReadJournal.Identifier
 }
 
-class InMemoryReadJournal(journal: ScalaInMemoryReadJournal) extends ReadJournal
-  with CurrentPersistenceIdsQuery
-  with PersistenceIdsQuery
-  with CurrentEventsByPersistenceIdQuery
-  with EventsByPersistenceIdQuery
-  with CurrentEventsByTagQuery
-  with EventsByTagQuery {
+class InMemoryReadJournal(journal: ScalaInMemoryReadJournal)
+    extends ReadJournal
+    with CurrentPersistenceIdsQuery
+    with PersistenceIdsQuery
+    with CurrentEventsByPersistenceIdQuery
+    with EventsByPersistenceIdQuery
+    with CurrentEventsByTagQuery
+    with EventsByTagQuery {
 
   override def currentPersistenceIds(): Source[String, NotUsed] =
     journal.currentPersistenceIds().asJava
