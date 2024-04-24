@@ -1,10 +1,9 @@
 package nl.pragmasoft.pekko.sensors.metered
 
 import com.typesafe.config.Config
-import nl.pragmasoft.pekko.sensors.RunnableWatcher
+import nl.pragmasoft.pekko.sensors.{DispatcherMetrics, RunnableWatcher}
 import nl.pragmasoft.pekko.sensors.dispatch.DispatcherInstrumentationWrapper.{InstrumentedRun, Run}
 import nl.pragmasoft.pekko.sensors.dispatch.RunnableWrapper
-import org.apache.pekko.sensors.DispatcherMetrics
 
 import java.util.concurrent.atomic.LongAdder
 import scala.concurrent.duration.Duration

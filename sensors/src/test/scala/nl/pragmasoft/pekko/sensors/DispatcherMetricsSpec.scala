@@ -2,7 +2,6 @@ package nl.pragmasoft.pekko.sensors
 
 import MetricsTestUtils.{asMetricName, builder}
 import io.prometheus.client.CollectorRegistry
-import org.apache.pekko.sensors.DispatcherMetrics
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 

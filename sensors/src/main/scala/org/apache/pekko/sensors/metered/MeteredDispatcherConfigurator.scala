@@ -1,7 +1,7 @@
 package org.apache.pekko.sensors.metered
 
 import com.typesafe.config.Config
-import nl.pragmasoft.pekko.sensors.metered.MeteredDispatcherSetup
+import nl.pragmasoft.pekko.sensors.metered.{MeteredDispatcher, MeteredDispatcherSettings, MeteredDispatcherSetup}
 import org.apache.pekko.dispatch.{DispatcherPrerequisites, MessageDispatcher, MessageDispatcherConfigurator}
 
 class MeteredDispatcherConfigurator(config: Config, prerequisites: DispatcherPrerequisites) extends MessageDispatcherConfigurator(config, prerequisites) {

@@ -1,7 +1,7 @@
 package org.apache.pekko.sensors.dispatch
 
 import nl.pragmasoft.pekko.sensors.PekkoSensors
-import nl.pragmasoft.pekko.sensors.dispatch.DispatcherInstrumentationWrapper
+import nl.pragmasoft.pekko.sensors.dispatch.{DispatcherInstrumentationWrapper, DispatcherMetricsRegistration}
 import org.apache.pekko.dispatch.{Dispatcher, Mailbox}
 import org.apache.pekko.event.Logging.Error
 

@@ -2,14 +2,13 @@ package org.apache.pekko.sensors.metered
 
 import org.apache.pekko.dispatch.{Dispatcher, Mailbox}
 import org.apache.pekko.event.Logging.Error
-import nl.pragmasoft.pekko.sensors.PekkoSensors
+import nl.pragmasoft.pekko.sensors.{DispatcherMetrics, PekkoSensors}
 import nl.pragmasoft.pekko.sensors.metered.MeteredDispatcherWrapper
-import org.apache.pekko.sensors.DispatcherMetrics
 
 import java.lang.management.{ManagementFactory, ThreadMXBean}
 import java.util.concurrent.RejectedExecutionException
 
-private[metered] trait MeteredDispatcherInstrumentation extends Dispatcher {
+trait MeteredDispatcherInstrumentation extends Dispatcher {
   protected def actorSystemName: String
   protected def metrics: DispatcherMetrics
 

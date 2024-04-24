@@ -1,7 +1,6 @@
-package org.apache.pekko.sensors
+package nl.pragmasoft.pekko.sensors
 
 import io.prometheus.client.{Collector, CollectorRegistry, Gauge, Histogram}
-import nl.pragmasoft.pekko.sensors.BasicMetricBuilders
 
 final case class DispatcherMetrics(
   queueTime: Histogram,

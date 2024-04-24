@@ -1,12 +1,11 @@
 package nl.pragmasoft.pekko.sensors.metered
 
-import org.apache.pekko.ConfigurationException
 import org.apache.pekko.actor.BootstrapSetup
 import org.apache.pekko.actor.setup.ActorSystemSetup
 import org.apache.pekko.actor.typed.{ActorSystem, DispatcherSelector, SpawnProtocol}
 import nl.pragmasoft.pekko.sensors.MetricsTestUtils.builder
 import MeteredInstrumentedExecutorSpec._
-import org.apache.pekko.sensors.DispatcherMetrics
+import nl.pragmasoft.pekko.sensors.DispatcherMetrics
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 

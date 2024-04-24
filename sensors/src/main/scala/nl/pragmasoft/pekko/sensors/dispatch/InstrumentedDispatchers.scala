@@ -4,7 +4,7 @@ import java.util.concurrent._
 import java.util.concurrent.atomic.LongAdder
 import org.apache.pekko.dispatch._
 import org.apache.pekko.event.Logging.Warning
-import org.apache.pekko.sensors.dispatch.{DispatcherMetricsRegistration, InstrumentedDispatcherBase, PekkoRunnableWrapper, ScalaRunnableWrapper}
+import org.apache.pekko.sensors.dispatch.{InstrumentedDispatcherBase, PekkoRunnableWrapper, ScalaRunnableWrapper}
 import DispatcherInstrumentationWrapper.Run
 import com.typesafe.config.Config
 import nl.pragmasoft.pekko.sensors.PekkoSensors
