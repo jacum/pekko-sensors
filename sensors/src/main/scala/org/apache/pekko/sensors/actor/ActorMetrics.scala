@@ -77,7 +77,7 @@ trait PersistentActorMetrics extends ActorMetrics with PersistentActor {
   private var recovered: Boolean    = false
   private lazy val recoveries       = metrics.recoveries.labels(actorLabel)
   private lazy val recoveryEvents   = metrics.recoveryEvents.labels(actorLabel)
-  private lazy val recoveryTime     = metrics.recoveryTime.labels(actorLabel).startTimer()
+  private val recoveryTime     = metrics.recoveryTime.labels(actorLabel).startTimer()
   private lazy val recoveryFailures = metrics.recoveryFailures.labels(actorLabel)
   private lazy val persistFailures  = metrics.persistFailures.labels(actorLabel)
   private lazy val persistRejects   = metrics.persistRejects.labels(actorLabel)

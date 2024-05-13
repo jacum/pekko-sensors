@@ -99,7 +99,7 @@ Sensors' bundled dashboards will be imported.
 ```
 libraryDependencies ++= 
   Seq(
-     "nl.pragmasoft.pekko" %% "sensors" % "1.0.2",
+     "nl.pragmasoft.pekko" %% "sensors" % "1.0.3",
   )
 ```
 
