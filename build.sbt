@@ -2,7 +2,7 @@ import Dependencies._
 import Keys._
 import sbt.file
 
-lazy val scala2 = "2.13.13"
+lazy val scala2 = "2.13.14"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
         organization := "nl.pragmasoft.pekko",

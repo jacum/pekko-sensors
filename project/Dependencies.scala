@@ -4,14 +4,14 @@ object Dependencies {
 
   object Logging {
     val slf4jversion = "2.0.7"
-    val slf4jApi     = "org.slf4j"                   % "slf4j-api"     % slf4jversion
-    val logback       = "ch.qos.logback" % "logback-classic" % "1.4.8"
-    val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
+    val slf4jApi     = "org.slf4j"                   % "slf4j-api"       % slf4jversion
+    val logback      = "ch.qos.logback"              % "logback-classic" % "1.4.8"
+    val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.5"
     val deps         = Seq(slf4jApi, scalaLogging, logback)
   }
 
   object Pekko {
-    val pekkoVersion = "1.0.3-M1"
+    val pekkoVersion = "1.1.0-M1"
 
     val actor            = "org.apache.pekko" %% "pekko-actor"             % pekkoVersion
     val typed            = "org.apache.pekko" %% "pekko-actor-typed"       % pekkoVersion
@@ -36,9 +36,9 @@ object Dependencies {
   }
 
   object Prometheus {
-    val hotspot   = "io.prometheus"     % "simpleclient_hotspot" % "0.16.0"
-    val common    = "io.prometheus"     % "simpleclient_common"  % "0.16.0"
-    val jmx       = "io.prometheus.jmx" % "collector"            % "0.17.1" exclude ("org.yaml", "snakeyaml")
+    val hotspot = "io.prometheus"     % "simpleclient_hotspot" % "0.16.0"
+    val common  = "io.prometheus"     % "simpleclient_common"  % "0.16.0"
+    val jmx     = "io.prometheus.jmx" % "collector"            % "0.17.1" exclude ("org.yaml", "snakeyaml")
 
     val deps = Seq(hotspot, common, jmx)
   }
@@ -63,7 +63,7 @@ object Dependencies {
   }
 
   object TestTools {
-    val scalaTest = "org.scalatest" %% "scalatest"       % "3.2.16"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.2.16"
     val deps      = Logging.deps ++ testDeps(scalaTest)
   }
 
