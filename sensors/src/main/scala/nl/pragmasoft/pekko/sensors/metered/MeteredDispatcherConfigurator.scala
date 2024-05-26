@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
 private object MeteredDispatcherConfigurator {
-  final implicit class ConfigOps(val config: Config) extends AnyVal {
+  implicit final class ConfigOps(val config: Config) extends AnyVal {
     def getMillisDuration(path: String): FiniteDuration = getDuration(path, TimeUnit.MILLISECONDS)
 
     def getNanosDuration(path: String): FiniteDuration = getDuration(path, TimeUnit.NANOSECONDS)

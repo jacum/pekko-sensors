@@ -70,6 +70,6 @@ lazy val `app` = project
 
 lazy val `root` = project
   .in(file("."))
-  .aggregate(app, sensors)
+  .aggregate(app, sensors, `inmem-journal`)
   .settings(commonSettings ++ noPublishSettings)
   .settings(name := "Pekko Sensors")
