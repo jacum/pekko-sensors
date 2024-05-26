@@ -42,7 +42,7 @@ lazy val noPublishSettings = Seq(
 
 lazy val `inmem-journal` = project
   .in(file("inmem-journal"))
-  .settings(commonSettings ++ noPublishSettings)
+  .settings(commonSettings)
   .settings(
     libraryDependencies ++= Pekko.inmemJournalDeps
   )
