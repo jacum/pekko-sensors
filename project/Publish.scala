@@ -52,7 +52,7 @@ object Publish {
           inquireVersions,
           runClean,
           setReleaseVersion,
-      //      runTest, // can't run test w/cross-version release
+          //      runTest, // can't run test w/cross-version release
           releaseStepCommandAndRemaining("+publishSigned"),
           releaseStepCommand("sonatypeBundleRelease")
         )

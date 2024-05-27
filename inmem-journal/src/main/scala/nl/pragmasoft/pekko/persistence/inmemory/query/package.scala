@@ -17,4 +17,3 @@
 package nl.pragmasoft.pekko.persistence.inmemory.query
 
 import scala.language.implicitConversions
-

@@ -41,7 +41,7 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
   final val ExpectNextTimeout = 10.second
 
   protected var senderProbe: TestProbe = _
-  private var _writerUuid: String = _
+  private var _writerUuid: String      = _
 
   /**
    * Returns the current writer uuid
@@ -52,8 +52,17 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
 
   implicit lazy val defaultJournal: ActorRef = Persistence(system).journalFor("inmemory-journal")
 
-  implicit lazy val defaultReadJournal: ReadJournal with CurrentPersistenceIdsQuery with PersistenceIdsQuery with CurrentEventsByPersistenceIdQuery with CurrentEventsByTagQuery with EventsByPersistenceIdQuery with EventsByTagQuery = PersistenceQuery(system).readJournalFor("inmemory-read-journal")
-    .asInstanceOf[ReadJournal with CurrentPersistenceIdsQuery with PersistenceIdsQuery with CurrentEventsByPersistenceIdQuery with CurrentEventsByTagQuery with CurrentEventsByTagQuery with EventsByPersistenceIdQuery with EventsByTagQuery]
+  implicit lazy val defaultReadJournal: ReadJournal
+    with CurrentPersistenceIdsQuery
+    with PersistenceIdsQuery
+    with CurrentEventsByPersistenceIdQuery
+    with CurrentEventsByTagQuery
+    with EventsByPersistenceIdQuery
+    with EventsByTagQuery = PersistenceQuery(system)
+    .readJournalFor("inmemory-read-journal")
+    .asInstanceOf[
+      ReadJournal with CurrentPersistenceIdsQuery with PersistenceIdsQuery with CurrentEventsByPersistenceIdQuery with CurrentEventsByTagQuery with CurrentEventsByTagQuery with EventsByPersistenceIdQuery with EventsByTagQuery
+    ]
 
   def withCurrentPersistenceIds(within: FiniteDuration = 10.seconds)(f: TestSubscriber.Probe[String] => Unit)(implicit readJournal: CurrentPersistenceIdsQuery): Unit = {
     val tp = readJournal.currentPersistenceIds().runWith(TestSink.probe[String])
@@ -65,32 +74,44 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
     tp.within(within)(f(tp))
   }
 
-  def withCurrentEventsByPersistenceId(within: FiniteDuration = 10.seconds)(persistenceId: String, fromSequenceNr: Long = 0, toSequenceNr: Long = Long.MaxValue)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: CurrentEventsByPersistenceIdQuery): Unit = {
+  def withCurrentEventsByPersistenceId(within: FiniteDuration = 10.seconds)(persistenceId: String, fromSequenceNr: Long = 0, toSequenceNr: Long = Long.MaxValue)(
+    f: TestSubscriber.Probe[EventEnvelope] => Unit
+  )(implicit readJournal: CurrentEventsByPersistenceIdQuery): Unit = {
     val tp = readJournal.currentEventsByPersistenceId(persistenceId, fromSequenceNr, toSequenceNr).runWith(TestSink.probe[EventEnvelope])
     tp.within(within)(f(tp))
   }
 
-  def withEventsByPersistenceId(within: FiniteDuration = 10.seconds)(persistenceId: String, fromSequenceNr: Long, toSequenceNr: Long = Long.MaxValue)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: EventsByPersistenceIdQuery): Unit = {
+  def withEventsByPersistenceId(within: FiniteDuration = 10.seconds)(persistenceId: String, fromSequenceNr: Long, toSequenceNr: Long = Long.MaxValue)(
+    f: TestSubscriber.Probe[EventEnvelope] => Unit
+  )(implicit readJournal: EventsByPersistenceIdQuery): Unit = {
     val tp = readJournal.eventsByPersistenceId(persistenceId, fromSequenceNr, toSequenceNr).runWith(TestSink.probe[EventEnvelope])
     tp.within(within)(f(tp))
   }
 
-  def withCurrentEventsByTag(within: FiniteDuration = 10.seconds)(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: CurrentEventsByTagQuery): Unit = {
+  def withCurrentEventsByTag(
+    within: FiniteDuration = 10.seconds
+  )(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: CurrentEventsByTagQuery): Unit = {
     val tp = readJournal.currentEventsByTag(tag, offset).runWith(TestSink.probe[EventEnvelope])
     tp.within(within)(f(tp))
   }
 
-  def withCurrentEventsByTag2(within: FiniteDuration = 10.seconds)(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: CurrentEventsByTagQuery): Unit = {
+  def withCurrentEventsByTag2(
+    within: FiniteDuration = 10.seconds
+  )(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: CurrentEventsByTagQuery): Unit = {
     val tp = readJournal.currentEventsByTag(tag, offset).runWith(TestSink.probe[EventEnvelope])
     tp.within(within)(f(tp))
   }
 
-  def withEventsByTag(within: FiniteDuration = 10.seconds)(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: EventsByTagQuery): Unit = {
+  def withEventsByTag(
+    within: FiniteDuration = 10.seconds
+  )(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: EventsByTagQuery): Unit = {
     val tp = readJournal.eventsByTag(tag, offset).runWith(TestSink.probe[EventEnvelope])
     tp.within(within)(f(tp))
   }
 
-  def withEventsByTag2(within: FiniteDuration = 10.seconds)(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: EventsByTagQuery): Unit = {
+  def withEventsByTag2(
+    within: FiniteDuration = 10.seconds
+  )(tag: String, offset: Offset)(f: TestSubscriber.Probe[EventEnvelope] => Unit)(implicit readJournal: EventsByTagQuery): Unit = {
     val tp = readJournal.eventsByTag(tag, offset).runWith(TestSink.probe[EventEnvelope])
     tp.within(within)(f(tp))
   }
@@ -126,7 +147,8 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
         sequenceNr = sequenceNr,
         persistenceId = pid,
         sender = sender,
-        writerUuid = writerUuid)
+        writerUuid = writerUuid
+      )
 
     val msgs: Seq[PersistentEnvelope] = (fromSnr to toSnr).map(i => AtomicWrite(persistentRepr(i)))
 
@@ -134,7 +156,7 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
 
     journal ! WriteMessages(msgs, probe.ref, 1)
     val timestamp = System.currentTimeMillis
-    val metadata = Option.empty
+    val metadata  = Option.empty
 
     probe.expectMsg(1.hour, WriteMessagesSuccessful)
     fromSnr to toSnr foreach { seqNo =>
@@ -142,7 +164,7 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
         case WriteMessageSuccess(PersistentImpl(payload, `seqNo`, `pid`, _, _, `sender`, `writerUuid`, timestamp, metadata), _) =>
           val id = s"a-$seqNo"
           payload should matchPattern {
-            case `id` =>
+            case `id`            =>
             case Tagged(`id`, _) =>
           }
         //          println(s"==> written '$payload', for pid: '$pid', seqNo: '$seqNo'")
@@ -159,7 +181,7 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
     probe.expectMsgType[DeleteMessagesSuccess](waitAtMost)
   }
 
-  override protected def beforeEach(): Unit = {
+  protected override def beforeEach(): Unit = {
     import org.apache.pekko.pattern.ask
     senderProbe = TestProbe()
     _writerUuid = UUID.randomUUID.toString
@@ -167,7 +189,6 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
     super.beforeEach()
   }
 
-  override protected def afterAll(): Unit = {
+  protected override def afterAll(): Unit =
     system.terminate().toTry should be a Symbol("success")
-  }
 }

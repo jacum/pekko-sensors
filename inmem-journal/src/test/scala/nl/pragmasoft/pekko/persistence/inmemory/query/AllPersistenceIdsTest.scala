@@ -22,11 +22,11 @@ import scala.concurrent.duration._
 
 class AllPersistenceIdsTest extends QueryTestSpec {
   it should "not terminate the stream when there are no pids" in
-    withAllPersistenceIds() { tp =>
-      tp.request(Long.MaxValue)
-      tp.expectNoMessage(100.millis)
-      tp.cancel()
-    }
+      withAllPersistenceIds() { tp =>
+        tp.request(Long.MaxValue)
+        tp.expectNoMessage(100.millis)
+        tp.cancel()
+      }
 
   it should "find persistenceIds" in {
     withAllPersistenceIds() { tp =>

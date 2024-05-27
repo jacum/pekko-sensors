@@ -43,19 +43,19 @@ class EventsByPersistenceIdTest extends QueryTestSpec {
 
     withEventsByPersistenceId()("my-1", 0, 1) { tp =>
       tp.request(Long.MaxValue)
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
     withEventsByPersistenceId()("my-1", 1, 1) { tp =>
       tp.request(Long.MaxValue)
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
     withEventsByPersistenceId()("my-1", 1, 2) { tp =>
       tp.request(Long.MaxValue)
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectComplete()
     }
@@ -81,7 +81,7 @@ class EventsByPersistenceIdTest extends QueryTestSpec {
 
     withEventsByPersistenceId()("my-1", 0, 3) { tp =>
       tp.request(Long.MaxValue)
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectComplete()
@@ -89,7 +89,7 @@ class EventsByPersistenceIdTest extends QueryTestSpec {
 
     withEventsByPersistenceId()("my-1", 1, 3) { tp =>
       tp.request(Long.MaxValue)
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectComplete()
@@ -102,7 +102,7 @@ class EventsByPersistenceIdTest extends QueryTestSpec {
       tp.expectNoMessage(expectTime)
 
       persist(1, 1, "my-1")
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNoMessage(expectTime)
 
       persist(2, 2, "my-1")
@@ -118,7 +118,7 @@ class EventsByPersistenceIdTest extends QueryTestSpec {
       tp.expectNoMessage(expectTime)
 
       persist(1, 1, "my-1")
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNoMessage(expectTime)
 
       persist(2, 2, "my-1")
@@ -142,7 +142,7 @@ class EventsByPersistenceIdTest extends QueryTestSpec {
 
     withEventsByPersistenceId()("my-2", 0, Long.MaxValue) { tp =>
       tp.request(Long.MaxValue)
-      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-2", 1, "a-1" , System.currentTimeMillis, None))
+      tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(1), "my-2", 1, "a-1", System.currentTimeMillis, None))
       tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(2), "my-2", 2, "a-2", System.currentTimeMillis, None))
       tp.expectNext(ExpectNextTimeout, EventEnvelope(Sequence(3), "my-2", 3, "a-3", System.currentTimeMillis, None))
       tp.expectNoMessage(expectTime)

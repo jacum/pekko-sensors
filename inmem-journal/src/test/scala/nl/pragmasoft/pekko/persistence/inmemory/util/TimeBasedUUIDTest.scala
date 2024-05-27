@@ -2,7 +2,7 @@ package nl.pragmasoft.pekko.persistence.inmemory.util
 
 import nl.pragmasoft.pekko.persistence.inmemory.TestSpec
 
-import java.time.{ OffsetDateTime, ZoneOffset }
+import java.time.{OffsetDateTime, ZoneOffset}
 import org.apache.pekko.persistence.query.TimeBasedUUID
 
 class TimeBasedUUIDTest extends TestSpec {

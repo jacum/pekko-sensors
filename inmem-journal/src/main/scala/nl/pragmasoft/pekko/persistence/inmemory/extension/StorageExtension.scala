@@ -17,7 +17,7 @@
 package nl.pragmasoft.pekko.persistence.inmemory.extension
 
 import com.typesafe.config.Config
-import org.apache.pekko.actor.{ ActorRef, ActorSystem, ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider }
+import org.apache.pekko.actor.{ActorRef, ActorSystem, ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider}
 
 trait StorageExtension extends Extension {
   def journalStorage(config: Config): ActorRef
@@ -30,7 +30,7 @@ object StorageExtensionProvider extends ExtensionId[StorageExtension] with Exten
     val storageName = system.settings.config.getString("inmemory-storage.class")
     system.log.info("Using storage {}", storageName)
     val storageClass = system.dynamicAccess.getClassFor[StorageExtension](storageName).get
-    val storage = storageClass.getDeclaredConstructor(classOf[ExtendedActorSystem]).newInstance(system)
+    val storage      = storageClass.getDeclaredConstructor(classOf[ExtendedActorSystem]).newInstance(system)
     storage
   }
 
@@ -41,4 +41,3 @@ object StorageExtensionProvider extends ExtensionId[StorageExtension] with Exten
    */
   override def get(as: ActorSystem): StorageExtension = apply(as)
 }
-

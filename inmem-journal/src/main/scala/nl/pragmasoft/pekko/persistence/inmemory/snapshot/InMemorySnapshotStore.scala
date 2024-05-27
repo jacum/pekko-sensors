@@ -17,13 +17,13 @@
 package nl.pragmasoft.pekko.persistence.inmemory.snapshot
 
 import java.util.concurrent.TimeUnit
-import org.apache.pekko.actor.{ ActorRef, ActorSystem }
+import org.apache.pekko.actor.{ActorRef, ActorSystem}
 import org.apache.pekko.pattern.ask
 import org.apache.pekko.persistence.serialization.Snapshot
 import org.apache.pekko.persistence.snapshot.SnapshotStore
-import org.apache.pekko.persistence.{ SelectedSnapshot, SnapshotMetadata, SnapshotSelectionCriteria }
+import org.apache.pekko.persistence.{SelectedSnapshot, SnapshotMetadata, SnapshotSelectionCriteria}
 import org.apache.pekko.serialization.SerializationExtension
-import org.apache.pekko.stream.{ ActorMaterializer, Materializer }
+import org.apache.pekko.stream.{ActorMaterializer, Materializer}
 import org.apache.pekko.util.Timeout
 import com.typesafe.config.Config
 import nl.pragmasoft.pekko.persistence.inmemory.SnapshotEntry
@@ -31,16 +31,16 @@ import nl.pragmasoft.pekko.persistence.inmemory.extension.InMemorySnapshotStorag
 import nl.pragmasoft.pekko.persistence.inmemory.extension.StorageExtensionProvider
 
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.OptionT
 import scalaz.std.AllInstances._
 
 class InMemorySnapshotStore(config: Config) extends SnapshotStore {
-  implicit val system: ActorSystem = context.system
+  implicit val system: ActorSystem  = context.system
   implicit val ec: ExecutionContext = context.dispatcher
-  implicit val mat: Materializer = Materializer(system)
-  implicit val timeout: Timeout = Timeout(config.getDuration("ask-timeout", TimeUnit.SECONDS) -> SECONDS)
-  val serialization = SerializationExtension(system)
+  implicit val mat: Materializer    = Materializer(system)
+  implicit val timeout: Timeout     = Timeout(config.getDuration("ask-timeout", TimeUnit.SECONDS) -> SECONDS)
+  val serialization                 = SerializationExtension(system)
 
   val snapshots: ActorRef = StorageExtensionProvider(system).snapshotStorage(config)
 
@@ -61,30 +61,32 @@ class InMemorySnapshotStore(config: Config) extends SnapshotStore {
     }
 
     val result = for {
-      entry <- OptionT(maybeEntry)
+      entry    <- OptionT(maybeEntry)
       snapshot <- OptionT(deserialize(entry))
     } yield SelectedSnapshot(SnapshotMetadata(entry.persistenceId, entry.sequenceNumber, entry.created), snapshot.data)
 
     result.run
   }
 
-  override def saveAsync(metadata: SnapshotMetadata, snapshot: Any): Future[Unit] = for {
-    snapshot <- Future.fromTry(serialization.serialize(Snapshot(snapshot)))
-    _ <- snapshots ? Save(metadata.persistenceId, metadata.sequenceNr, metadata.timestamp, snapshot)
-  } yield ()
+  override def saveAsync(metadata: SnapshotMetadata, snapshot: Any): Future[Unit] =
+    for {
+      snapshot <- Future.fromTry(serialization.serialize(Snapshot(snapshot)))
+      _        <- snapshots ? Save(metadata.persistenceId, metadata.sequenceNr, metadata.timestamp, snapshot)
+    } yield ()
 
   override def deleteAsync(metadata: SnapshotMetadata): Future[Unit] =
     (snapshots ? Delete(metadata.persistenceId, metadata.sequenceNr)).map(_ => ())
 
-  override def deleteAsync(persistenceId: String, criteria: SnapshotSelectionCriteria): Future[Unit] = criteria match {
-    case SnapshotSelectionCriteria(Long.MaxValue, Long.MaxValue, _, _) =>
-      (snapshots ? DeleteAllSnapshots(persistenceId)).map(_ => ())
-    case SnapshotSelectionCriteria(Long.MaxValue, maxTimestamp, _, _) =>
-      (snapshots ? DeleteUpToMaxTimestamp(persistenceId, maxTimestamp)).map(_ => ())
-    case SnapshotSelectionCriteria(maxSequenceNr, Long.MaxValue, _, _) =>
-      (snapshots ? DeleteUpToMaxSequenceNr(persistenceId, maxSequenceNr)).map(_ => ())
-    case SnapshotSelectionCriteria(maxSequenceNr, maxTimestamp, _, _) =>
-      (snapshots ? DeleteUpToMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)).map(_ => ())
-    case _ => Future.successful(())
-  }
+  override def deleteAsync(persistenceId: String, criteria: SnapshotSelectionCriteria): Future[Unit] =
+    criteria match {
+      case SnapshotSelectionCriteria(Long.MaxValue, Long.MaxValue, _, _) =>
+        (snapshots ? DeleteAllSnapshots(persistenceId)).map(_ => ())
+      case SnapshotSelectionCriteria(Long.MaxValue, maxTimestamp, _, _) =>
+        (snapshots ? DeleteUpToMaxTimestamp(persistenceId, maxTimestamp)).map(_ => ())
+      case SnapshotSelectionCriteria(maxSequenceNr, Long.MaxValue, _, _) =>
+        (snapshots ? DeleteUpToMaxSequenceNr(persistenceId, maxSequenceNr)).map(_ => ())
+      case SnapshotSelectionCriteria(maxSequenceNr, maxTimestamp, _, _) =>
+        (snapshots ? DeleteUpToMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)).map(_ => ())
+      case _ => Future.successful(())
+    }
 }

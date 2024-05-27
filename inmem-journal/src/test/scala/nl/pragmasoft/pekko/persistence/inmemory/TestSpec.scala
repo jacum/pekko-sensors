@@ -41,37 +41,31 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.Try
 
-abstract class TestSpec(config: Config) extends AnyFlatSpec
-  with Matchers
-  with ScalaFutures
-  with Eventually
-  with ClasspathResources
-  with BeforeAndAfterAll
-  with BeforeAndAfterEach {
+abstract class TestSpec(config: Config) extends AnyFlatSpec with Matchers with ScalaFutures with Eventually with ClasspathResources with BeforeAndAfterAll with BeforeAndAfterEach {
 
   def this(config: String = "application.conf") = this(ConfigFactory.load(config))
 
-  implicit val system: ActorSystem = ActorSystem("test", config)
-  implicit val mat: Materializer = Materializer(system)
+  implicit val system: ActorSystem          = ActorSystem("test", config)
+  implicit val mat: Materializer            = Materializer(system)
   implicit val ec: ExecutionContextExecutor = system.dispatcher
-  val log: LoggingAdapter = Logging(system, this.getClass)
-  implicit val pc: PatienceConfig = PatienceConfig(timeout = 60.minutes, interval = 300.millis)
-  implicit val timeout: Timeout = Timeout(60.minutes)
-  val serialization = SerializationExtension(system)
+  val log: LoggingAdapter                   = Logging(system, this.getClass)
+  implicit val pc: PatienceConfig           = PatienceConfig(timeout = 60.minutes, interval = 300.millis)
+  implicit val timeout: Timeout             = Timeout(60.minutes)
+  val serialization                         = SerializationExtension(system)
 
-  def now: Long = System.currentTimeMillis
+  def now: Long                 = System.currentTimeMillis
   def getNowUUID: TimeBasedUUID = TimeBasedUUID(UUIDs.timeBased())
   def getTimeBasedUUIDFromTimestamp(timestamp: Long): TimeBasedUUID =
     TimeBasedUUID(UUIDs.startOf(timestamp))
   def getTimestamp(format: String): Long =
     new SimpleDateFormat("yyyy-MM-dd").parse(format).getTime
 
-  final val DATE_FORMAT_TWO_THOUSAND = "2000-01-01"
-  final val DATE_FORMAT_TWO_THOUSAND_AND_TEN = "2010-01-01"
+  final val DATE_FORMAT_TWO_THOUSAND            = "2000-01-01"
+  final val DATE_FORMAT_TWO_THOUSAND_AND_TEN    = "2010-01-01"
   final val DATE_FORMAT_TWO_THOUSAND_AND_TWENTY = "2010-01-01"
 
-  val uuid_two_thousand: TimeBasedUUID = getTimeBasedUUIDFromTimestamp(getTimestamp(DATE_FORMAT_TWO_THOUSAND))
-  val uuid_two_thousand_and_ten: TimeBasedUUID = getTimeBasedUUIDFromTimestamp(getTimestamp(DATE_FORMAT_TWO_THOUSAND_AND_TEN))
+  val uuid_two_thousand: TimeBasedUUID            = getTimeBasedUUIDFromTimestamp(getTimestamp(DATE_FORMAT_TWO_THOUSAND))
+  val uuid_two_thousand_and_ten: TimeBasedUUID    = getTimeBasedUUIDFromTimestamp(getTimestamp(DATE_FORMAT_TWO_THOUSAND_AND_TEN))
   val uuid_two_thousand_and_twenty: TimeBasedUUID = getTimeBasedUUIDFromTimestamp(getTimestamp(DATE_FORMAT_TWO_THOUSAND_AND_TWENTY))
 
   def randomUuid = UUID.randomUUID

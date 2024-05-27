@@ -29,9 +29,10 @@ private object StorageExtensionByProperty {
 class StorageExtensionByProperty()(implicit val system: ExtendedActorSystem) extends StorageExtension with ActorSingletonSupport {
   import StorageExtensionByProperty._
   private val serialization = SerializationExtension(system)
-  private val propertyKeys = if (system.settings.config.hasPath(PropertyKeysKey)) system.settings.config.getStringList(PropertyKeysKey).asScala else Nil
+  private val propertyKeys  = if (system.settings.config.hasPath(PropertyKeysKey)) system.settings.config.getStringList(PropertyKeysKey).asScala else Nil
 
-  override def journalStorage(config: Config): ActorRef = localNonClusteredActorSingleton(system, Props(new InMemoryJournalStorage(serialization)), s"JournalStorage${keyspace(config)}")
+  override def journalStorage(config: Config): ActorRef =
+    localNonClusteredActorSingleton(system, Props(new InMemoryJournalStorage(serialization)), s"JournalStorage${keyspace(config)}")
 
   override def snapshotStorage(config: Config): ActorRef = localNonClusteredActorSingleton(system, Props(new InMemorySnapshotStorage), s"SnapshotStorage${keyspace(config)}")
 

@@ -24,7 +24,8 @@ import org.apache.pekko.persistence.query.scaladsl._
 class StorageExtensionByPropertyTest extends QueryTestSpec("storage-by-property.conf") {
 
   private lazy val journalWithSomeKeyspace: ActorRef = Persistence(system).journalFor("inmemory-journal-some-other")
-  private lazy val readJournalSomeKeyspace = PersistenceQuery(system).readJournalFor("inmemory-read-journal-some-other")
+  private lazy val readJournalSomeKeyspace = PersistenceQuery(system)
+    .readJournalFor("inmemory-read-journal-some-other")
     .asInstanceOf[ReadJournal with CurrentPersistenceIdsQuery]
 
   it should "not find any persistenceIds for different keyspace" in {

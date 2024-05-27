@@ -180,3 +180,4 @@ class CurrentEventsByTag2UUIDJournalTest extends QueryTestSpec("uuid-offset-mode
     }
   }
 }
+§

@@ -21,10 +21,10 @@ import org.apache.pekko.persistence.inmemory.query.QueryTestSpec
 class CurrentPersistenceIdsTest extends QueryTestSpec {
 
   it should "not find any persistenceIds for empty journal" in
-    withCurrentPersistenceIds() { tp =>
-      tp.request(1)
-      tp.expectComplete()
-    }
+      withCurrentPersistenceIds() { tp =>
+        tp.request(1)
+        tp.expectComplete()
+      }
 
   it should "find persistenceIds" in {
     persist("my-1")

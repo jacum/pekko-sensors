@@ -22,10 +22,10 @@ import org.apache.pekko.persistence.query.{EventEnvelope, Sequence}
 class CurrentEventsByPersistenceIdTest extends QueryTestSpec {
 
   it should "not find any events for unknown pid" in
-    withCurrentEventsByPersistenceId()("unkown-pid", 0L, Long.MaxValue) { tp =>
-      tp.request(Int.MaxValue)
-      tp.expectComplete()
-    }
+      withCurrentEventsByPersistenceId()("unkown-pid", 0L, Long.MaxValue) { tp =>
+        tp.request(Int.MaxValue)
+        tp.expectComplete()
+      }
 
   it should "find events from an offset" in {
     persist(1, 4, "my-1")
@@ -51,36 +51,36 @@ class CurrentEventsByPersistenceIdTest extends QueryTestSpec {
 
     withCurrentEventsByPersistenceId()("my-1", 2, 2) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
     withCurrentEventsByPersistenceId()("my-1", 2, 3) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
     withCurrentEventsByPersistenceId()("my-1", 3, 3) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
     withCurrentEventsByPersistenceId()("my-1", 0, 3) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
     withCurrentEventsByPersistenceId()("my-1", 1, 3) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
       tp.expectComplete()
     }
   }
@@ -92,10 +92,10 @@ class CurrentEventsByPersistenceIdTest extends QueryTestSpec {
 
     withCurrentEventsByPersistenceId()("my-1", 1) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(1), "my-1", 1, "a-1", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
@@ -103,9 +103,9 @@ class CurrentEventsByPersistenceIdTest extends QueryTestSpec {
 
     withCurrentEventsByPersistenceId()("my-1", 1) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(2), "my-1", 2, "a-2", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
@@ -113,8 +113,8 @@ class CurrentEventsByPersistenceIdTest extends QueryTestSpec {
 
     withCurrentEventsByPersistenceId()("my-1", 1) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3" , System.currentTimeMillis, None))
-      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(3), "my-1", 3, "a-3", System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
@@ -122,7 +122,7 @@ class CurrentEventsByPersistenceIdTest extends QueryTestSpec {
 
     withCurrentEventsByPersistenceId()("my-1", 1) { tp =>
       tp.request(Int.MaxValue)
-      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4" , System.currentTimeMillis, None))
+      tp.expectNext(EventEnvelope(Sequence(4), "my-1", 4, "a-4", System.currentTimeMillis, None))
       tp.expectComplete()
     }
 
