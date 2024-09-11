@@ -3,10 +3,12 @@ import Keys._
 import sbt.file
 
 lazy val scala2 = "2.13.14"
+lazy val scala3 = "3.3.3"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
         organization := "nl.pragmasoft.pekko",
         scalaVersion := scala2,
+        crossScalaVersions := Seq(scala2, scala3),
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
         Test / parallelExecution := false,
         Test / fork := true,

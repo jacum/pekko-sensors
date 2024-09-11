@@ -16,13 +16,17 @@
 
 package nl.pragmasoft.pekko.persistence.inmemory.query
 
-import org.apache.pekko.actor.ExtendedActorSystem
-import org.apache.pekko.persistence.query.ReadJournalProvider
+import org.apache.pekko
+import pekko.actor.ExtendedActorSystem
+import pekko.persistence.query.ReadJournalProvider
 import com.typesafe.config.Config
 import nl.pragmasoft.pekko.persistence.inmemory.extension.StorageExtensionProvider
 
 class InMemoryReadJournalProvider(system: ExtendedActorSystem, config: Config) extends ReadJournalProvider {
-  override val scaladslReadJournal: scaladsl.InMemoryReadJournal = new scaladsl.InMemoryReadJournal(config, StorageExtensionProvider(system).journalStorage(config))(system)
+  private val scalaJournal = new scaladsl.InMemoryReadJournal(config, StorageExtensionProvider(system).journalStorage(config))(system)
+  private val javaJournal = new javadsl.InMemoryReadJournal(scalaJournal)
 
-  override val javadslReadJournal: javadsl.InMemoryReadJournal = new javadsl.InMemoryReadJournal(scaladslReadJournal)
+  override def scaladslReadJournal(): pekko.persistence.query.scaladsl.ReadJournal = scalaJournal
+
+  override def javadslReadJournal(): pekko.persistence.query.javadsl.ReadJournal = javaJournal
 }
