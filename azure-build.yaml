@@ -5,8 +5,7 @@ trigger:
       - main
       - feature*
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: 'hetzner04'
 
 variables:
   - group: AkkaSensors
@@ -14,13 +13,6 @@ variables:
     value: $(Pipeline.Workspace)/.ivy2
 
 steps:
-
-  - task: JavaToolInstaller@0
-    inputs:
-      versionSpec: '17'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
-      cleanDestinationDirectory: false
 
   - task: Bash@3
     displayName: 'Building and testing 2.13'
