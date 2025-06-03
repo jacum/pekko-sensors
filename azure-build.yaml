@@ -5,7 +5,7 @@ trigger:
       - main
       - feature*
 
-pool: 'hetzner04'
+pool: 'hetzner'
 
 variables:
   - group: AkkaSensors
