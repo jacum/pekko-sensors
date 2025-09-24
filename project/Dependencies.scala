@@ -25,7 +25,7 @@ object Dependencies {
     val slf4j        = "org.apache.pekko" %% "pekko-slf4j"         % pekkoVersion
 
     val stream = "org.apache.pekko" %% "pekko-stream" % pekkoVersion
-    val scalaz = "org.scalaz"       %% "scalaz-core"  % "7.3.7"
+    val scalaz = "org.scalaz"       %% "scalaz-core"  % "7.3.8"
 
     val persistenceTck = "org.apache.pekko" %% "pekko-persistence-tck" % pekkoVersion % Test
     val streamTestKit  = "org.apache.pekko" %% "pekko-stream-testkit"  % pekkoVersion % Test
