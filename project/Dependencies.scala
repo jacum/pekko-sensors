@@ -11,7 +11,7 @@ object Dependencies {
   }
 
   object Pekko {
-    val pekkoVersion = "1.1.3"
+    val pekkoVersion = "1.1.5"
 
     val actor            = "org.apache.pekko" %% "pekko-actor"             % pekkoVersion
     val typed            = "org.apache.pekko" %% "pekko-actor-typed"       % pekkoVersion
