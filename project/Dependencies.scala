@@ -63,7 +63,7 @@ object Dependencies {
   }
 
   object TestTools {
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.2.16"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.2.19"
     val deps      = Logging.deps ++ testDeps(scalaTest)
   }
 
