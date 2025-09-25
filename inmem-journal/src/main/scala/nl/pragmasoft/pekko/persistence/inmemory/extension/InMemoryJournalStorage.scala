@@ -27,6 +27,7 @@ import org.apache.pekko.serialization.Serialization
 import scala.collection.immutable._
 import scalaz.syntax.semigroup._
 import scalaz.std.AllInstances._
+
 object InMemoryJournalStorage {
   sealed trait JournalCommand                                                                                                 extends NoSerializationVerificationNeeded
   case object PersistenceIds                                                                                                  extends JournalCommand
@@ -101,7 +102,11 @@ class InMemoryJournalStorage(serialization: Serialization) extends Actor with Ac
   }
 
   def writelist(ref: ActorRef, xs: Seq[JournalEntry]): Unit = {
-    val ys = xs.map(_.copy(ordering = incrementAndGet)).groupBy(_.persistenceId)
+    val ys = xs.map(_.copy(ordering = incrementAndGet))
+      .groupBy(_.persistenceId)
+      .view
+      .mapValues(_.toVector)
+      .toMap
     journal = journal |+| ys
 
     ref ! org.apache.pekko.actor.Status.Success(())

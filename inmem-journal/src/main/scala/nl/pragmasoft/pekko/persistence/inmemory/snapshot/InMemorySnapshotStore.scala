@@ -57,7 +57,7 @@ class InMemorySnapshotStore(config: Config) extends SnapshotStore {
         (snapshots ? SnapshotForMaxSequenceNr(persistenceId, maxSequenceNr)).mapTo[Option[SnapshotEntry]]
       case SnapshotSelectionCriteria(maxSequenceNr, maxTimestamp, _, _) =>
         (snapshots ? SnapshotForMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)).mapTo[Option[SnapshotEntry]]
-      case _ => Future.successful(None)
+      case null => Future.successful(None)
     }
 
     val result = for {
@@ -87,6 +87,6 @@ class InMemorySnapshotStore(config: Config) extends SnapshotStore {
         (snapshots ? DeleteUpToMaxSequenceNr(persistenceId, maxSequenceNr)).map(_ => ())
       case SnapshotSelectionCriteria(maxSequenceNr, maxTimestamp, _, _) =>
         (snapshots ? DeleteUpToMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)).map(_ => ())
-      case _ => Future.successful(())
+      case null => Future.successful(())
     }
 }

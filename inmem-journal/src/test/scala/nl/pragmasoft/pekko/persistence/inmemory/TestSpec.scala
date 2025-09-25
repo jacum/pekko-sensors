@@ -20,23 +20,22 @@ import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.pekko.NotUsed
 import org.apache.pekko.actor.{ActorRef, ActorSystem, PoisonPill}
 import org.apache.pekko.event.{Logging, LoggingAdapter}
-import nl.pragmasoft.pekko.persistence.inmemory.util.{ClasspathResources, UUIDs}
 import org.apache.pekko.persistence.query.TimeBasedUUID
 import org.apache.pekko.serialization.SerializationExtension
 import org.apache.pekko.stream.scaladsl.Source
 import org.apache.pekko.stream.testkit.TestSubscriber
 import org.apache.pekko.stream.testkit.scaladsl.TestSink
-import org.apache.pekko.stream.{ActorMaterializer, Materializer}
+import org.apache.pekko.stream.Materializer
 import org.apache.pekko.testkit.TestProbe
 import org.apache.pekko.util.Timeout
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
+import nl.pragmasoft.pekko.persistence.inmemory.util.{ClasspathResources, UUIDs}
 
 import java.text.SimpleDateFormat
 import java.util.UUID
-import scala.compat.Platform
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.Try
@@ -48,7 +47,7 @@ abstract class TestSpec(config: Config) extends AnyFlatSpec with Matchers with S
   implicit val system: ActorSystem          = ActorSystem("test", config)
   implicit val mat: Materializer            = Materializer(system)
   implicit val ec: ExecutionContextExecutor = system.dispatcher
-  val log: LoggingAdapter                   = Logging(system, this.getClass)
+  val log: LoggingAdapter                   = Logging(system, this.getClass.getName)
   implicit val pc: PatienceConfig           = PatienceConfig(timeout = 60.minutes, interval = 300.millis)
   implicit val timeout: Timeout             = Timeout(60.minutes)
   val serialization                         = SerializationExtension(system)

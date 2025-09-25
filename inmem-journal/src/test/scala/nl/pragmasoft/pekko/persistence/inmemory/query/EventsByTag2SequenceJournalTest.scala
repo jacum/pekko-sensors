@@ -120,7 +120,7 @@ class EventsByTag2SequenceJournalTest extends QueryTestSpec {
     persist(1, 1, "my-2", "number") // 2
     persist(1, 1, "my-3", "number") // 3
 
-    val (id1 :: id2 :: id3 :: Nil) = currentEventsByTagAsList("number", started).map(_.offset)
+    val (id1 :: id2 :: id3 :: Nil) = currentEventsByTagAsList("number", started).map(_.offset): @unchecked
 
     withEventsByTag2()("number", started) { tp =>
       tp.request(Int.MaxValue)
