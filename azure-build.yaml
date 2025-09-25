@@ -5,8 +5,7 @@ trigger:
       - main
       - feature*
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: 'hetzner'
 
 variables:
   - group: AkkaSensors
@@ -15,18 +14,11 @@ variables:
 
 steps:
 
-  - task: JavaToolInstaller@0
-    inputs:
-      versionSpec: '17'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
-      cleanDestinationDirectory: false
-
   - task: Bash@3
     displayName: 'Building and testing'
     inputs:
       targetType: 'inline'
       script: |
-        sbt -Divy.home=${IVY_HOME} -Dsbt.ivy.home=${IVY_HOME} "++2.13; clean; coverage; test; coverageReport" && bash <(curl -s https://codecov.io/bash)
+        sbt -Divy.home=${IVY_HOME} -Dsbt.ivy.home=${IVY_HOME} "++2.13; test"
         sbt -Divy.home=${IVY_HOME} -Dsbt.ivy.home=${IVY_HOME} "++3.3; test"
       failOnStderr: false

@@ -4,8 +4,7 @@ trigger:
     include:
     - main
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: 'hetzner'
 
 variables:
   - group: AkkaSensors
@@ -15,14 +14,6 @@ steps:
     name: secring
     inputs:
       secureFile: secring.asc
-
-
-  - task: JavaToolInstaller@0
-    inputs:
-      versionSpec: '17'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
-      cleanDestinationDirectory: false
 
   - task: Bash@3
     displayName: 'Build, sign and publish'
@@ -44,7 +35,7 @@ steps:
         git config --global user.email "tim@@pragmasoft.nl"
         git config --global user.name "Azure Devops release pipeline"
 
-        sbt -Divy.home=${IVY_HOME} -Dsbt.ivy.home=${IVY_HOME} "++2.13.14; test"
+        sbt -Divy.home=${IVY_HOME} -Dsbt.ivy.home=${IVY_HOME} "++2.13.16; test"
         sbt -Divy.home=${IVY_HOME} -Dsbt.ivy.home=${IVY_HOME} "release with-defaults"
 
         rm -rf $(secring.secureFilePath)
