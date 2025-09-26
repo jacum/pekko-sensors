@@ -6,7 +6,7 @@ lazy val scala2 = "2.13.16"
 lazy val scala3 = "3.3.7"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-        organization := "nl.pragmasoft.pekko",
+        organization := "nl.pragmasoft",
         scalaVersion := scala2,
         crossScalaVersions := Seq(scala2, scala3),
         testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
@@ -42,36 +42,23 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
-lazy val `inmem-journal` = project
-  .in(file("inmem-journal"))
+lazy val `pekko-inmem-journal` = project
+  .in(file("pekko-inmem-journal"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Pekko.inmemJournalDeps
   )
 
-lazy val sensors = project
-  .in(file("sensors"))
+lazy val `pekko-sensors` = project
+  .in(file("pekko-sensors"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Pekko.deps ++ Prometheus.deps ++ Logging.deps ++ TestTools.deps
   )
-  .dependsOn(`inmem-journal` % Test)
-
-lazy val `app` = project
-  .in(file("examples/app"))
-  .enablePlugins(JavaAppPackaging, DockerPlugin)
-  .settings(commonSettings ++ noPublishSettings)
-  .settings(
-    dockerBaseImage := "openjdk",
-    Compile / mainClass := Some("nl.pragmasoft.app.Main"),
-    Docker / version := Keys.version.value,
-    dockerUpdateLatest := true,
-    libraryDependencies ++= App.deps
-  )
-  .dependsOn(sensors, `inmem-journal`)
+  .dependsOn(`pekko-inmem-journal` % Test)
 
 lazy val `root` = project
   .in(file("."))
-  .aggregate(app, sensors, `inmem-journal`)
+  .aggregate(`pekko-sensors`, `pekko-inmem-journal`)
   .settings(commonSettings ++ noPublishSettings)
   .settings(name := "Pekko Sensors")

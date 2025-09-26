@@ -11,7 +11,7 @@ object Dependencies {
   }
 
   object Pekko {
-    val pekkoVersion = "1.1.5"
+    val pekkoVersion = "1.2.1"
 
     val actor            = "org.apache.pekko" %% "pekko-actor"             % pekkoVersion
     val typed            = "org.apache.pekko" %% "pekko-actor-typed"       % pekkoVersion
@@ -36,38 +36,20 @@ object Dependencies {
   }
 
   object Prometheus {
-    val hotspot = "io.prometheus"     % "simpleclient_hotspot" % "0.16.0"
-    val common  = "io.prometheus"     % "simpleclient_common"  % "0.16.0"
-    val jmx     = "io.prometheus.jmx" % "collector"            % "0.20.0" exclude ("org.yaml", "snakeyaml")
+    val hotspot        = "io.prometheus" % "prometheus-metrics-instrumentation-jvm"    % "1.4.1"
+    val common         = "io.prometheus" % "prometheus-metrics-core"                   % "1.4.1"
+    val exposition     = "io.prometheus" % "prometheus-metrics-exposition-textformats" % "1.4.1"
+    val exporterCommon = "io.prometheus" % "prometheus-metrics-exporter-common"        % "1.4.1"
 
-    val deps = Seq(hotspot, common, jmx)
-  }
+    val jmx       = "io.prometheus.jmx" % "collector" % "1.4.0"
+    val snakeYaml = "org.yaml"          % "snakeyaml" % "2.5"
 
-  object Http4s {
-    // unfortunately, http4s modules' versions not synced anymore
-    val http4sVersionBase    = "0.23.17"
-    val http4sVersionModules = "0.23.31"
-    val http4sVersionMetrics = "0.25.0"
-    val server               = "org.http4s"       %% "http4s-blaze-server"       % http4sVersionBase
-    val client               = "org.http4s"       %% "http4s-blaze-client"       % http4sVersionBase
-    val jdkClient            = "org.http4s"       %% "http4s-jdk-http-client"    % "0.7.0"
-    val circe                = "org.http4s"       %% "http4s-circe"              % http4sVersionModules
-    val dsl                  = "org.http4s"       %% "http4s-dsl"                % http4sVersionModules
-    val metrics              = "org.http4s"       %% "http4s-prometheus-metrics" % http4sVersionMetrics
-    val prometheusJmx        = "io.prometheus.jmx" % "collector"                 % "0.20.0"
-    val deps: Seq[ModuleID]  = Seq(server, client, circe, dsl, metrics, prometheusJmx)
-  }
-
-  object App {
-    val deps = Http4s.deps ++ Pekko.deps ++ Logging.deps
+    val deps = Seq(hotspot, common, exporterCommon, jmx, exposition, snakeYaml)
   }
 
   object TestTools {
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.2.19"
-    val deps      = Logging.deps ++ testDeps(scalaTest)
+    val log       = "ch.qos.logback"                           % "logback-classic" % "1.5.18"
+    val scalaTest = "org.scalatest"                           %% "scalatest"       % "3.2.19"
+    val deps      = Logging.deps ++ Seq(scalaTest, log) map (_ % Test)
   }
-
-  def scopeDeps(scope: String, modules: Seq[ModuleID]) = modules.map(m => m % scope)
-  def testDeps(modules: ModuleID*)                     = scopeDeps("test", modules)
-
 }

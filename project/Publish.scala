@@ -15,19 +15,22 @@ object Publish {
   val ReleaseToSonatype = Seq(
     credentials ++= Seq(
           Credentials(
-            "Sonatype Nexus Repository Manager",
-            "oss.sonatype.org",
-            sys.env.getOrElse("USERNAME", ""),
-            sys.env.getOrElse("PASSWORD", "")
+            "Sonatype Central",
+            "central.sonatype.com",
+            sys.env.getOrElse("SONATYPE_USER", ""),
+            sys.env.getOrElse("SONATYPE_PASSWORD", "")
           ),
           Credentials(
             "GnuPG Key ID",
             "gpg",
-            "E9F32B46ABCE86181ABDBF8ECE902ED363A2FA58", // key identifier
-            "ignored"                                   // this field is ignored; passwords are supplied by pinentry
+            "80639E9F764EA1049652FDBBDA743228BD43ED35", // key identifier
+            "ignored"                                   // sbt-pgp uses PGP_PASSPHRASE; this field is ignored
           )
         ),
-    sonatypeProfileName := "nl.pragmasoft",
+    sonatypeProfileName := "nl.pragmasoft.sensors",
+    // Central Publishing Portal (OSSRH EOL)
+    sonatypeCredentialHost := "central.sonatype.com",
+    sonatypeRepository := "https://central.sonatype.com/api",
     licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
     homepage := Some(url("https://github.com/jacum/pekko-sensors")),
     scmInfo := Some(ScmInfo(browseUrl = url("https://github.com/jacum/pekko-sensors"), connection = "scm:git@github.com:jacum/pekko-sensors.git")),
@@ -53,14 +56,16 @@ object Publish {
           runClean,
           setReleaseVersion,
           //      runTest, // can't run test w/cross-version release
+          releaseStepCommand("sonatypeBundleClean"),
           releaseStepCommandAndRemaining("+publishSigned"),
-          releaseStepCommand("sonatypeBundleRelease")
+          releaseStepCommand("sonatypeCentralUpload"),
+          releaseStepCommand("sonatypeCentralRelease")
         )
   )
 
   val settings =
-    if (sys.env.contains("USERNAME")) {
-      println(s"Releasing to Sonatype as ${sys.env("USERNAME")}")
+    if (sys.env.contains("SONATYPE_USER")) {
+      println(s"Releasing to Sonatype as ${sys.env("SONATYPE_USER")}")
       ReleaseToSonatype
     } else SuppressJavaDocsAndSources
 
