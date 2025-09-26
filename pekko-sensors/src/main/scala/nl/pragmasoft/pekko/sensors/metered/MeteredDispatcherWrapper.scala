@@ -37,9 +37,9 @@ class MeteredDispatcherWrapper(metrics: DispatcherMetrics, config: Config) {
 private[metered] object MeteredDispatcherWrapper {
   def meteredRun(metrics: DispatcherMetrics, id: String): InstrumentedRun = {
     val currentWorkers = new LongAdder
-    val queue          = metrics.queueTime.labels(id)
-    val run            = metrics.runTime.labels(id)
-    val active         = metrics.activeThreads.labels(id)
+    val queue          = metrics.queueTime.labelValues(id)
+    val run            = metrics.runTime.labelValues(id)
+    val active         = metrics.activeThreads.labelValues(id)
 
     () => {
       val created = System.currentTimeMillis()

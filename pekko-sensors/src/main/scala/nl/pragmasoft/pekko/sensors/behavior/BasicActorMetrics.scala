@@ -14,9 +14,9 @@ final case class BasicActorMetrics[C](
   messageLabel: C => Option[String]
 ) {
 
-  private lazy val exceptions = metrics.exceptions.labels(actorLabel)
-  private val activeActors    = metrics.activeActors.labels(actorLabel)
-  private val activityTimer   = metrics.activityTime.labels(actorLabel).startTimer()
+  private lazy val exceptions = metrics.exceptions.labelValues(actorLabel)
+  private val activeActors    = metrics.activeActors.labelValues(actorLabel)
+  private val activityTimer   = metrics.activityTime.labelValues(actorLabel).startTimer()
 
   def apply(behavior: Behavior[C])(implicit ct: ClassTag[C]): Behavior[C] = {
 
@@ -55,14 +55,14 @@ final case class BasicActorMetrics[C](
           try {
             val next = messageLabel(msg).map {
               metrics.receiveTime
-                .labels(actorLabel, _)
+                .labelValues(actorLabel, _)
                 .observeExecution(target(ctx, msg))
             }
               .getOrElse(target(ctx, msg))
 
             if (Behavior.isUnhandled(next))
               messageLabel(msg)
-                .foreach(metrics.unhandledMessages.labels(actorLabel, _).inc())
+                .foreach(metrics.unhandledMessages.labelValues(actorLabel, _).inc())
             next
           } catch {
             case NonFatal(e) =>

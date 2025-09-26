@@ -30,11 +30,11 @@ trait InstrumentedDispatcherBase extends Dispatcher {
       interestingStates foreach { state =>
         val stateLabel = state.toString.toLowerCase
         DispatcherMetricsRegistration.threadStates
-          .labels(id, stateLabel)
+          .labelValues(id, stateLabel)
           .set(threads.count(_.getThreadState.name().equalsIgnoreCase(stateLabel)))
       }
       DispatcherMetricsRegistration.threads
-        .labels(id)
+        .labelValues(id)
         .set(threads.length)
     }
   )

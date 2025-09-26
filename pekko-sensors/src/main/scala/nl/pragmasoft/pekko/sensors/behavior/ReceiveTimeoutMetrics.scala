@@ -12,7 +12,7 @@ final case class ReceiveTimeoutMetrics[C](
   timeoutCmd: C
 ) {
 
-  private val receiveTimeouts = metrics.receiveTimeouts.labels(actorLabel)
+  private val receiveTimeouts = metrics.receiveTimeouts.labelValues(actorLabel)
 
   def apply(behavior: Behavior[C])(implicit ct: ClassTag[C]): Behavior[C] = {
 

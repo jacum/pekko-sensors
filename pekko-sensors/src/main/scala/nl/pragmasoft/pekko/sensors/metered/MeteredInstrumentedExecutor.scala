@@ -18,18 +18,18 @@ class MeteredInstrumentedExecutor(val config: Config, val prerequisites: Dispatc
       def createExecutorService: ExecutorService = {
         val es = esf.createExecutorService
 
-        val activeCount       = metrics.executorValue.labels(id, "activeCount")
-        val corePoolSize      = metrics.executorValue.labels(id, "corePoolSize")
-        val largestPoolSize   = metrics.executorValue.labels(id, "largestPoolSize")
-        val maximumPoolSize   = metrics.executorValue.labels(id, "maximumPoolSize")
-        val queueSize         = metrics.executorValue.labels(id, "queueSize")
-        val completedTasks    = metrics.executorValue.labels(id, "completedTasks")
-        val poolSize          = metrics.executorValue.labels(id, "poolSize")
-        val steals            = metrics.executorValue.labels(id, "steals")
-        val parallelism       = metrics.executorValue.labels(id, "parallelism")
-        val queuedSubmissions = metrics.executorValue.labels(id, "queuedSubmissions")
-        val queuedTasks       = metrics.executorValue.labels(id, "queuedTasks")
-        val runningThreads    = metrics.executorValue.labels(id, "runningThreads")
+        val activeCount       = metrics.executorValue.labelValues(id, "activeCount")
+        val corePoolSize      = metrics.executorValue.labelValues(id, "corePoolSize")
+        val largestPoolSize   = metrics.executorValue.labelValues(id, "largestPoolSize")
+        val maximumPoolSize   = metrics.executorValue.labelValues(id, "maximumPoolSize")
+        val queueSize         = metrics.executorValue.labelValues(id, "queueSize")
+        val completedTasks    = metrics.executorValue.labelValues(id, "completedTasks")
+        val poolSize          = metrics.executorValue.labelValues(id, "poolSize")
+        val steals            = metrics.executorValue.labelValues(id, "steals")
+        val parallelism       = metrics.executorValue.labelValues(id, "parallelism")
+        val queuedSubmissions = metrics.executorValue.labelValues(id, "queuedSubmissions")
+        val queuedTasks       = metrics.executorValue.labelValues(id, "queuedTasks")
+        val runningThreads    = metrics.executorValue.labelValues(id, "runningThreads")
 
         es match {
           case tp: ThreadPoolExecutor =>
