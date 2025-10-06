@@ -5,7 +5,7 @@ object Dependencies {
   object Logging {
     val slf4jversion = "2.0.17"
     val slf4jApi     = "org.slf4j"                   % "slf4j-api"       % slf4jversion
-    val logback      = "ch.qos.logback"              % "logback-classic" % "1.5.18"
+    val logback      = "ch.qos.logback"              % "logback-classic" % "1.5.19"
     val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.6"
     val deps         = Seq(slf4jApi, scalaLogging, logback)
   }
@@ -48,7 +48,7 @@ object Dependencies {
   }
 
   object TestTools {
-    val log       = "ch.qos.logback"                           % "logback-classic" % "1.5.18"
+    val log       = "ch.qos.logback"                           % "logback-classic" % "1.5.19"
     val scalaTest = "org.scalatest"                           %% "scalatest"       % "3.2.19"
     val deps      = Logging.deps ++ Seq(scalaTest, log) map (_ % Test)
   }
