@@ -160,14 +160,13 @@ abstract class QueryTestSpec(config: String = "application.conf") extends TestSp
 
     probe.expectMsg(1.hour, WriteMessagesSuccessful)
     fromSnr to toSnr foreach { seqNo =>
-      probe.expectMsgPF(1.hour) {
-        case WriteMessageSuccess(PersistentImpl(payload, `seqNo`, `pid`, _, _, `sender`, `writerUuid`, timestamp, metadata), _) =>
-          val id = s"a-$seqNo"
-          payload should matchPattern {
-            case `id`            =>
-            case Tagged(`id`, _) =>
-          }
-        //          println(s"==> written '$payload', for pid: '$pid', seqNo: '$seqNo'")
+      probe.expectMsgPF(1.hour) { case WriteMessageSuccess(PersistentImpl(payload, `seqNo`, `pid`, _, _, `sender`, `writerUuid`, timestamp, metadata), _) =>
+        val id = s"a-$seqNo"
+        payload should matchPattern {
+          case `id`            =>
+          case Tagged(`id`, _) =>
+        }
+      //          println(s"==> written '$payload', for pid: '$pid', seqNo: '$seqNo'")
       }
     }
   }

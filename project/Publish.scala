@@ -14,19 +14,19 @@ object Publish {
 
   val ReleaseToSonatype = Seq(
     credentials ++= Seq(
-          Credentials(
-            "Sonatype Central",
-            "central.sonatype.com",
-            sys.env.getOrElse("SONATYPE_USER", ""),
-            sys.env.getOrElse("SONATYPE_PASSWORD", "")
-          ),
-          Credentials(
-            "GnuPG Key ID",
-            "gpg",
-            "80639E9F764EA1049652FDBBDA743228BD43ED35", // key identifier
-            "ignored"                                   // sbt-pgp uses PGP_PASSPHRASE; this field is ignored
-          )
-        ),
+      Credentials(
+        "Sonatype Central",
+        "central.sonatype.com",
+        sys.env.getOrElse("SONATYPE_USER", ""),
+        sys.env.getOrElse("SONATYPE_PASSWORD", "")
+      ),
+      Credentials(
+        "GnuPG Key ID",
+        "gpg",
+        "80639E9F764EA1049652FDBBDA743228BD43ED35", // key identifier
+        "ignored"                                   // sbt-pgp uses PGP_PASSPHRASE; this field is ignored
+      )
+    ),
     sonatypeProfileName := "nl.pragmasoft.sensors",
     // Central Publishing Portal (OSSRH EOL)
     sonatypeCredentialHost := "central.sonatype.com",
@@ -35,13 +35,13 @@ object Publish {
     homepage := Some(url("https://github.com/jacum/pekko-sensors")),
     scmInfo := Some(ScmInfo(browseUrl = url("https://github.com/jacum/pekko-sensors"), connection = "scm:git@github.com:jacum/pekko-sensors.git")),
     pomExtra := (
-          <developers>
+      <developers>
         <developer>
           <id>PragmaSoft</id>
           <name>PragmaSoft</name>
         </developer>
       </developers>
-        ),
+    ),
     publishMavenStyle := true,
     publishTo := sonatypePublishToBundle.value,
     Test / publishArtifact := false,
@@ -51,16 +51,16 @@ object Publish {
     releaseCrossBuild := true,
     releaseIgnoreUntrackedFiles := true,
     releaseProcess := Seq[ReleaseStep](
-          checkSnapshotDependencies,
-          inquireVersions,
-          runClean,
-          setReleaseVersion,
-          //      runTest, // can't run test w/cross-version release
-          releaseStepCommand("sonatypeBundleClean"),
-          releaseStepCommandAndRemaining("+publishSigned"),
-          releaseStepCommand("sonatypeCentralUpload"),
-          releaseStepCommand("sonatypeCentralRelease")
-        )
+      checkSnapshotDependencies,
+      inquireVersions,
+      runClean,
+      setReleaseVersion,
+      //      runTest, // can't run test w/cross-version release
+      releaseStepCommand("sonatypeBundleClean"),
+      releaseStepCommandAndRemaining("+publishSigned"),
+      releaseStepCommand("sonatypeCentralUpload"),
+      releaseStepCommand("sonatypeCentralRelease")
+    )
   )
 
   val settings =

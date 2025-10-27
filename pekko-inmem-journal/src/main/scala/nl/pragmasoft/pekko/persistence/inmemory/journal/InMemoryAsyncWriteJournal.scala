@@ -71,8 +71,8 @@ class InMemoryAsyncWriteJournal(config: Config) extends AsyncWriteJournal {
     }.fold(Try(List.empty[JournalEntry])) {
       case (Success(xs), e) => Success(xs :+ e)
       case (c, _)           => c
-    }.recover {
-      case cause => Failure(cause)
+    }.recover { case cause =>
+      Failure(cause)
     }
   }
 

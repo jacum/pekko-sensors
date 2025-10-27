@@ -72,11 +72,16 @@ class InMemoryReadJournal(config: Config, journal: ActorRef)(implicit val system
   private val writePluginId = config.getString("write-plugin")
   private val eventAdapters = Persistence(system).adaptersFor(writePluginId)
 
-  log.debug("""
+  log.debug(
+    """
       |ask-timeout: {}
       |refresh-interval: {}
       |max-buffer-size: {}
-    """.stripMargin, timeout, refreshInterval, maxBufferSize)
+    """.stripMargin,
+    timeout,
+    refreshInterval,
+    maxBufferSize
+  )
 
   override def currentPersistenceIds(): Source[String, NotUsed] =
     Source
@@ -142,8 +147,8 @@ class InMemoryReadJournal(config: Config, journal: ActorRef)(implicit val system
       )
       .mapConcat(identity)
       .via(deserializationWithOffset(offset))
-      .map {
-        case (offset, repr) => EventEnvelope(offset, repr.persistenceId, repr.sequenceNr, repr.payload, System.currentTimeMillis, None)
+      .map { case (offset, repr) =>
+        EventEnvelope(offset, repr.persistenceId, repr.sequenceNr, repr.payload, System.currentTimeMillis, None)
       }
 
   override def eventsByTag(tag: String, offset: Offset): Source[EventEnvelope, NotUsed] =

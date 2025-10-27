@@ -41,10 +41,10 @@ object UUIDs {
 
   def makeMSB(timestamp: Long): Long =
     0L |
-        (0x00000000ffffffffL & timestamp) << 32 |
-        (0x0000ffff00000000L & timestamp) >>> 16 |
-        (0x0fff000000000000L & timestamp) >>> 48 |
-        0x0000000000001000L
+      (0x00000000ffffffffL & timestamp) << 32 |
+      (0x0000ffff00000000L & timestamp) >>> 16 |
+      (0x0fff000000000000L & timestamp) >>> 48 |
+      0x0000000000001000L
 
   def unixTimestamp(uuid: UUID): Long = {
     require(uuid.version() == 1, s"Can only retrieve the unix timestamp for version 1 uuid (provided version ${uuid.version})")
