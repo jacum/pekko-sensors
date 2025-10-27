@@ -37,10 +37,9 @@ object ClusterEventWatchTypedActor {
           }
           Behaviors.same
         }
-        .receiveSignal {
-          case (_, PostStop) =>
-            cluster.subscriptions ! Unsubscribe(context.self)
-            Behaviors.same
+        .receiveSignal { case (_, PostStop) =>
+          cluster.subscriptions ! Unsubscribe(context.self)
+          Behaviors.same
         }
     }
 

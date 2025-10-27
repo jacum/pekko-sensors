@@ -6,34 +6,34 @@ lazy val scala2 = "2.13.17"
 lazy val scala3 = "3.3.7"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-        organization := "nl.pragmasoft",
-        scalaVersion := scala2,
-        crossScalaVersions := Seq(scala2, scala3),
-        testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
-        Test / parallelExecution := false,
-        Test / fork := true,
-        scalacOptions := Seq(
-              s"-unchecked",
-              "-deprecation",
-              "-feature",
-              "-language:higherKinds",
-              "-language:existentials",
-              "-language:implicitConversions",
-              "-language:postfixOps",
-              "-encoding",
-              "utf8",
-              "-Xfatal-warnings"
-            ),
-        Compile / packageBin / packageOptions
-          +=
-            Package.ManifestAttributes(
-              "Build-Time"   -> new java.util.Date().toString,
-              "Build-Commit" -> git.gitHeadCommit.value.getOrElse("No Git Revision Found")
-            ),
-        doc / sources := Seq.empty,
-        packageSrc / publishArtifact := false,
-        packageDoc / publishArtifact := true
-      ) ++ Publish.settings
+  organization := "nl.pragmasoft",
+  scalaVersion := scala2,
+  crossScalaVersions := Seq(scala2, scala3),
+  testOptions += Tests.Argument(TestFrameworks.JUnit, "-v"),
+  Test / parallelExecution := false,
+  Test / fork := true,
+  scalacOptions := Seq(
+    s"-unchecked",
+    "-deprecation",
+    "-feature",
+    "-language:higherKinds",
+    "-language:existentials",
+    "-language:implicitConversions",
+    "-language:postfixOps",
+    "-encoding",
+    "utf8",
+    "-Xfatal-warnings"
+  ),
+  Compile / packageBin / packageOptions
+    +=
+    Package.ManifestAttributes(
+      "Build-Time"   -> new java.util.Date().toString,
+      "Build-Commit" -> git.gitHeadCommit.value.getOrElse("No Git Revision Found")
+    ),
+  doc / sources := Seq.empty,
+  packageSrc / publishArtifact := false,
+  packageDoc / publishArtifact := true
+) ++ Publish.settings
 
 lazy val noPublishSettings = Seq(
   publish / skip := true,
