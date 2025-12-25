@@ -49,7 +49,7 @@ final case class EventSourcedMetrics[C, E, S](
               res match {
                 case _: P.ReplayedMessage =>
                   if (!firstEventPassed) {
-                    recoveryToFirstEventTime.observe(recoveryToFirstEventTime.startTimer().observeDuration() * 1000)
+                    metrics.recoveryToFirstEventTime.labelValues(actorLabel).observe(recoveryToFirstEventTime.observeDuration() * 1000)
                     firstEventPassed = true
                   }
                   recoveryEvents.inc()
@@ -58,14 +58,14 @@ final case class EventSourcedMetrics[C, E, S](
                 case _: P.WriteMessageFailure   => persistFailures.inc()
                 case _: P.RecoverySuccess =>
                   recoveries.inc()
-                  recoveryTime.observe(recoveryTime.startTimer().observeDuration() * 1000)
+                  metrics.recoveryTime.labelValues(actorLabel).observe(recoveryTime.observeDuration() * 1000)
 
                 case _ =>
               }
 
             case RecoveryPermitter.RecoveryPermitGranted =>
               waitingForRecoveryGauge.dec()
-              waitingForRecoveryTime.observe(waitingForRecoveryTime.startTimer().observeDuration() * 1000)
+              metrics.waitingForRecoveryTime.labelValues(actorLabel).observe(waitingForRecoveryTime.observeDuration() * 1000)
 
             case _ =>
           }

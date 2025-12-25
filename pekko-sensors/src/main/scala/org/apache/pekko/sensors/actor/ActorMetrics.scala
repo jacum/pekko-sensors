@@ -93,20 +93,20 @@ trait PersistentActorMetrics extends ActorMetrics with PersistentActor {
       ClassNameUtil.simpleName(msg.getClass) match {
         case msg if msg.startsWith("ReplayedMessage") =>
           if (!firstEventPassed) {
-            recoveryToFirstEventTime.observe(recoveryToFirstEventTime.startTimer().observeDuration() * 1000)
+            metrics.recoveryToFirstEventTime.labelValues(actorLabel).observe(recoveryToFirstEventTime.observeDuration() * 1000)
             firstEventPassed = true
           }
           recoveryEvents.inc()
 
         case msg if msg.startsWith("RecoveryPermitGranted") =>
           waitingForRecoveryGauge.dec()
-          waitingForRecoveryTime.observe(waitingForRecoveryTime.startTimer().observeDuration() * 1000)
+          metrics.waitingForRecoveryTime.labelValues(actorLabel).observe(waitingForRecoveryTime.observeDuration() * 1000)
 
         case _ => ()
       }
     else if (!recovered) {
       recoveries.inc()
-      recoveryTime.observe(recoveryTime.startTimer().observeDuration() * 1000)
+      metrics.recoveryTime.labelValues(actorLabel).observe(recoveryTime.observeDuration() * 1000)
       recovered = true
     }
     internalAroundReceive(receive, msg)
