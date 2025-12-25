@@ -19,16 +19,16 @@ final case class EventSourcedMetrics[C, E, S](
   metrics: SensorMetrics
 ) extends LazyLogging {
 
-  private val recoveries                = metrics.recoveries.labelValues(actorLabel)
-  private val recoveryEvents            = metrics.recoveryEvents.labelValues(actorLabel)
-  private var firstEventPassed: Boolean = false
-  private val recoveryTime              = metrics.recoveryTime.labelValues(actorLabel).startTimer()
-  private val recoveryToFirstEventTime  = metrics.recoveryToFirstEventTime.labelValues(actorLabel).startTimer()
-  private val recoveryFailures          = metrics.recoveryFailures.labelValues(actorLabel)
-  private val persistFailures           = metrics.persistFailures.labelValues(actorLabel)
-  private val persistRejects            = metrics.persistRejects.labelValues(actorLabel)
-  private val waitingForRecoveryGauge   = metrics.waitingForRecovery.labelValues(actorLabel)
-  private val waitingForRecoveryTime    = metrics.waitingForRecoveryTime.labelValues(actorLabel).startTimer()
+  private val recoveries                     = metrics.recoveries.labelValues(actorLabel)
+  private val recoveryEvents                 = metrics.recoveryEvents.labelValues(actorLabel)
+  private var firstEventPassed: Boolean      = false
+  private val recoveryStartNanos             = System.nanoTime()
+  private val recoveryToFirstEventStartNanos = System.nanoTime()
+  private val recoveryFailures               = metrics.recoveryFailures.labelValues(actorLabel)
+  private val persistFailures                = metrics.persistFailures.labelValues(actorLabel)
+  private val persistRejects                 = metrics.persistRejects.labelValues(actorLabel)
+  private val waitingForRecoveryGauge        = metrics.waitingForRecovery.labelValues(actorLabel)
+  private val waitingForRecoveryStartNanos   = System.nanoTime()
 
   waitingForRecoveryGauge.inc()
 
@@ -49,7 +49,7 @@ final case class EventSourcedMetrics[C, E, S](
               res match {
                 case _: P.ReplayedMessage =>
                   if (!firstEventPassed) {
-                    metrics.recoveryToFirstEventTime.labelValues(actorLabel).observe(recoveryToFirstEventTime.observeDuration() * 1000)
+                    metrics.recoveryToFirstEventTime.labelValues(actorLabel).observe((System.nanoTime() - recoveryToFirstEventStartNanos) / 1e6)
                     firstEventPassed = true
                   }
                   recoveryEvents.inc()
@@ -58,14 +58,14 @@ final case class EventSourcedMetrics[C, E, S](
                 case _: P.WriteMessageFailure   => persistFailures.inc()
                 case _: P.RecoverySuccess =>
                   recoveries.inc()
-                  metrics.recoveryTime.labelValues(actorLabel).observe(recoveryTime.observeDuration() * 1000)
+                  metrics.recoveryTime.labelValues(actorLabel).observe((System.nanoTime() - recoveryStartNanos) / 1e6)
 
                 case _ =>
               }
 
             case RecoveryPermitter.RecoveryPermitGranted =>
               waitingForRecoveryGauge.dec()
-              metrics.waitingForRecoveryTime.labelValues(actorLabel).observe(waitingForRecoveryTime.observeDuration() * 1000)
+              metrics.waitingForRecoveryTime.labelValues(actorLabel).observe((System.nanoTime() - waitingForRecoveryStartNanos) / 1e6)
 
             case _ =>
           }

@@ -20,7 +20,7 @@ trait ActorMetrics extends Actor with ActorLogging {
   private lazy val exceptions = metrics.exceptions.labelValues(actorLabel)
   private val activeActors    = metrics.activeActors.labelValues(actorLabel)
 
-  private val activityTimer = metrics.activityTime.labelValues(actorLabel).startTimer()
+  private val activityStartNanos = System.nanoTime()
 
   protected[pekko] override def aroundReceive(receive: Receive, msg: Any): Unit =
     internalAroundReceive(receive, msg)
@@ -51,7 +51,7 @@ trait ActorMetrics extends Actor with ActorLogging {
 
   protected[pekko] override def aroundPostStop(): Unit = {
     activeActors.dec()
-    activityTimer.observeDuration()
+    metrics.activityTime.labelValues(actorLabel).observe((System.nanoTime() - activityStartNanos) / 1e9)
     super.aroundPostStop()
   }
 
@@ -74,17 +74,17 @@ trait PersistentActorMetrics extends ActorMetrics with PersistentActor {
 
   protected def eventLabel(value: Any): Option[String] = messageLabel(value)
 
-  private var recovered: Boolean        = false
-  private var firstEventPassed: Boolean = false
-  private lazy val recoveries           = metrics.recoveries.labelValues(actorLabel)
-  private lazy val recoveryEvents       = metrics.recoveryEvents.labelValues(actorLabel)
-  private val recoveryTime              = metrics.recoveryTime.labelValues(actorLabel).startTimer()
-  private val recoveryToFirstEventTime  = metrics.recoveryTime.labelValues(actorLabel).startTimer()
-  private lazy val recoveryFailures     = metrics.recoveryFailures.labelValues(actorLabel)
-  private lazy val persistFailures      = metrics.persistFailures.labelValues(actorLabel)
-  private lazy val persistRejects       = metrics.persistRejects.labelValues(actorLabel)
-  private val waitingForRecoveryGauge   = metrics.waitingForRecovery.labelValues(actorLabel)
-  private val waitingForRecoveryTime    = metrics.waitingForRecoveryTime.labelValues(actorLabel).startTimer()
+  private var recovered: Boolean             = false
+  private var firstEventPassed: Boolean      = false
+  private lazy val recoveries                = metrics.recoveries.labelValues(actorLabel)
+  private lazy val recoveryEvents            = metrics.recoveryEvents.labelValues(actorLabel)
+  private val recoveryStartNanos             = System.nanoTime()
+  private val recoveryToFirstEventStartNanos = System.nanoTime()
+  private lazy val recoveryFailures          = metrics.recoveryFailures.labelValues(actorLabel)
+  private lazy val persistFailures           = metrics.persistFailures.labelValues(actorLabel)
+  private lazy val persistRejects            = metrics.persistRejects.labelValues(actorLabel)
+  private val waitingForRecoveryGauge        = metrics.waitingForRecovery.labelValues(actorLabel)
+  private val waitingForRecoveryStartNanos   = System.nanoTime()
 
   waitingForRecoveryGauge.inc()
 
@@ -93,20 +93,20 @@ trait PersistentActorMetrics extends ActorMetrics with PersistentActor {
       ClassNameUtil.simpleName(msg.getClass) match {
         case msg if msg.startsWith("ReplayedMessage") =>
           if (!firstEventPassed) {
-            metrics.recoveryToFirstEventTime.labelValues(actorLabel).observe(recoveryToFirstEventTime.observeDuration() * 1000)
+            metrics.recoveryToFirstEventTime.labelValues(actorLabel).observe((System.nanoTime() - recoveryToFirstEventStartNanos) / 1e6)
             firstEventPassed = true
           }
           recoveryEvents.inc()
 
         case msg if msg.startsWith("RecoveryPermitGranted") =>
           waitingForRecoveryGauge.dec()
-          metrics.waitingForRecoveryTime.labelValues(actorLabel).observe(waitingForRecoveryTime.observeDuration() * 1000)
+          metrics.waitingForRecoveryTime.labelValues(actorLabel).observe((System.nanoTime() - waitingForRecoveryStartNanos) / 1e6)
 
         case _ => ()
       }
     else if (!recovered) {
       recoveries.inc()
-      metrics.recoveryTime.labelValues(actorLabel).observe(recoveryTime.observeDuration() * 1000)
+      metrics.recoveryTime.labelValues(actorLabel).observe((System.nanoTime() - recoveryStartNanos) / 1e6)
       recovered = true
     }
     internalAroundReceive(receive, msg)
