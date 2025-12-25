@@ -19,14 +19,14 @@ object DispatcherMetrics {
     DispatcherMetrics(
       queueTime = Histogram
         .builder()
-        .classicUpperBounds(10000)
+        .classicExponentialUpperBounds(0.5, 2, 14)
         .name("pekko_sensors_dispatchers_queue_time_millis")
         .help(s"Milliseconds in queue")
         .labelNames("dispatcher")
         .build(),
       runTime = Histogram
         .builder()
-        .classicUpperBounds(10000)
+        .classicExponentialUpperBounds(0.5, 2, 14)
         .name("pekko_sensors_dispatchers_run_time_millis")
         .help(s"Milliseconds running")
         .labelNames("dispatcher")
