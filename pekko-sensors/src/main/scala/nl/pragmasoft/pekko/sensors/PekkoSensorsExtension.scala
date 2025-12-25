@@ -155,12 +155,12 @@ object MetricOps {
     def observeExecution[A](f: => A): A = {
       val timer = histogram.startTimer()
       try f
-      finally timer.observeDuration()
+      finally histogram.observe(timer.observeDuration() * 1000)
     }
 
     def observeEffect[E, S](eff: EffectBuilder[E, S]): EffectBuilder[E, S] = {
       val timer = histogram.startTimer()
-      eff.thenRun(_ => timer.observeDuration())
+      eff.thenRun(_ => histogram.observe(timer.observeDuration() * 1000))
     }
   }
 
