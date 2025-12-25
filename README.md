@@ -1,6 +1,6 @@
 # Pekko Observability 
 
-![Maven Central](https://img.shields.io/maven-central/v/nl.pragmasoft.pekko/sensors_2.13?color=%2300AA00)
+![Maven Central](https://img.shields.io/maven-central/v/nl.pragmasoft/pekko-sensors_2.13?color=%2300AA00)
 
 **Non-intrusive native Prometheus collectors for Pekko internals, negligible performance overhead, suitable for production use.**
 
