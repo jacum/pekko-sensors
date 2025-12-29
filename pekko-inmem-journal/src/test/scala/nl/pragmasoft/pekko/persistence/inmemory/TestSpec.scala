@@ -81,7 +81,7 @@ abstract class TestSpec(config: Config) extends AnyFlatSpec with Matchers with S
   }
 
   def withTestProbe[A](src: Source[A, NotUsed])(f: TestSubscriber.Probe[A] => Unit): Unit =
-    f(src.runWith(TestSink.probe(system)))
+    f(src.runWith(TestSink[A]()))
 
   implicit class PimpedByteArray(self: Array[Byte]) {
     def getString: String = new String(self)
