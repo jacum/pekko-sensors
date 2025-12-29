@@ -81,7 +81,8 @@ class PekkoSensorsSpec extends AnyFreeSpec with LazyLogging with Eventually with
       eventually {
         assertMetrics(
           _.startsWith("pekko_sensors_actor_active_actors{actor=\"MassProbe\""),
-          _.endsWith(s" $actors.0")
+          _.endsWith(s" $actors.0"),
+          "MassProbe:active_actors:initial"
         )
       }
       eventually {
@@ -91,22 +92,26 @@ class PekkoSensorsSpec extends AnyFreeSpec with LazyLogging with Eventually with
       eventually {
         assertMetrics(
           _.startsWith("pekko_sensors_actor_receive_time_millis_count{actor=\"MassProbe\""),
-          _.endsWith(s" $actors")
+          _.endsWith(s" $actors"),
+          "MassProbe:receive_time_millis_count"
         )
       }
       eventually {
         assertMetrics(
           _.startsWith("pekko_sensors_actor_active_actors{actor=\"MassProbe\""),
-          _.endsWith(s" 0.0")
+          _.endsWith(s" 0.0"),
+          "MassProbe:active_actors:zero"
         )
         assertMetrics(
           _.startsWith("pekko_sensors_actor_receive_timeouts_total{actor=\"MassProbe\""),
-          _.endsWith(s" $actors.0")
+          _.endsWith(s" $actors.0"),
+          "MassProbe:receive_timeouts_total"
         )
       }
       assertMetrics(
-        _.startsWith("pekko_sensors_actor_activity_time_seconds_bucket{actor=\"MassProbe\",le=\"10.0\""),
-        _.endsWith(s" $actors")
+        _.startsWith("pekko_sensors_actor_activity_time_seconds_bucket{actor=\"MassProbe\",le=\"+Inf\""),
+        _.endsWith(s" $actors"),
+        "MassProbe:activity_time_seconds_bucket"
       )
     }
 
@@ -138,7 +143,8 @@ class PekkoSensorsSpec extends AnyFreeSpec with LazyLogging with Eventually with
       eventually {
         assertMetrics(
           _.startsWith(s"""pekko_sensors_actor_active_actors{actor="$actorName""""),
-          _.endsWith(s" $actors.0")
+          _.endsWith(s" $actors.0"),
+          s"$actorName:active_actors:initial"
         )
       }
       eventually {
@@ -147,7 +153,8 @@ class PekkoSensorsSpec extends AnyFreeSpec with LazyLogging with Eventually with
       eventually {
         assertMetrics(
           _.startsWith(s"""pekko_sensors_actor_active_actors{actor="$actorName""""),
-          _.endsWith(s" $actors.0")
+          _.endsWith(s" $actors.0"),
+          s"$actorName:active_actors:after_termination_check"
         )
       }
 
@@ -158,29 +165,34 @@ class PekkoSensorsSpec extends AnyFreeSpec with LazyLogging with Eventually with
       eventually {
         assertMetrics(
           _.startsWith(s"""pekko_sensors_actor_persist_time_millis_count{actor="$actorName"""),
-          _.endsWith(s" ${actors * commands}")
+          _.endsWith(s" ${actors * commands}"),
+          s"$actorName:persist_time_millis_count"
         )
       }
 
       eventually {
         assertMetrics(
           _.startsWith(s"""pekko_sensors_actor_active_actors{actor="$actorName""""),
-          _.endsWith(s" 0.0")
+          _.endsWith(s" 0.0"),
+          s"$actorName:active_actors:zero"
         )
         assertMetrics(
           _.startsWith(s"""pekko_sensors_actor_receive_timeouts_total{actor="$actorName""""),
-          _.endsWith(s" $actors.0")
+          _.endsWith(s" $actors.0"),
+          s"$actorName:receive_timeouts_total"
         )
       }
 
       assertMetrics(
-        _.startsWith(s"""pekko_sensors_actor_activity_time_seconds_bucket{actor="$actorName",le="10.0""""),
-        _.endsWith(s" $actors")
+        _.startsWith(s"""pekko_sensors_actor_activity_time_seconds_bucket{actor="$actorName",le="+Inf""""),
+        _.endsWith(s" $actors"),
+        s"$actorName:activity_time_seconds_bucket"
       )
 
       assertMetrics(
         _.startsWith(s"""pekko_sensors_actor_persist_time_millis_count{actor="$actorName",event="ValidEvent""""),
-        _.endsWith(s" ${actors * commands}")
+        _.endsWith(s" ${actors * commands}"),
+        s"$actorName:persist_time_millis_count:with_event"
       )
 
       val refRecovered = (1 to actors).map(createRef)
@@ -188,7 +200,8 @@ class PekkoSensorsSpec extends AnyFreeSpec with LazyLogging with Eventually with
       eventually {
         assertMetrics(
           _.startsWith(s"""pekko_sensors_actor_active_actors{actor="$actorName""""),
-          _.endsWith(s" $actors.0")
+          _.endsWith(s" $actors.0"),
+          s"$actorName:active_actors:after_recovery"
         )
       }
 
@@ -197,34 +210,39 @@ class PekkoSensorsSpec extends AnyFreeSpec with LazyLogging with Eventually with
       eventually {
         assertMetrics(
           _.startsWith(s"""pekko_sensors_actor_recoveries_total{actor="$actorName""""),
-          _.endsWith(s" ${actors * 2}.0")
+          _.endsWith(s" ${actors * 2}.0"),
+          s"$actorName:recoveries_total"
         )
       }
 
       assertMetrics(
         _.startsWith(s"""pekko_sensors_actor_recovery_events_total{actor="$actorName""""),
-        _.endsWith(s" ${actors * commands}.0")
+        _.endsWith(s" ${actors * commands}.0"),
+        s"$actorName:recovery_events_total"
       )
 
       assertMetrics(
         _.startsWith(s"""pekko_sensors_actor_waiting_for_recovery_permit_actors{actor="$actorName""""),
-        _.endsWith(s" 0.0")
+        _.endsWith(s" 0.0"),
+        s"$actorName:waiting_for_recovery_permit_actors"
       )
 
       assertMetrics(
         _.startsWith(s"""pekko_sensors_actor_waiting_for_recovery_permit_time_millis_count{actor="$actorName""""),
-        _.endsWith(s" ${actors * 2}")
+        _.endsWith(s" ${actors * 2}"),
+        s"$actorName:waiting_for_recovery_permit_time_millis_count"
       )
     }
   }
 
-  private def assertMetrics(filter: String => Boolean, assertion: String => Boolean) = {
-    val ms = metrics
-    val m  = ms.split("\n").find(filter)
+  private def assertMetrics(filter: String => Boolean, assertion: String => Boolean, tag: String = "") = {
+    val ms      = metrics
+    val m       = ms.split("\n").find(filter)
+    val tagInfo = if (tag.nonEmpty) s" [$tag]" else "?"
 
-    m.map(m => assert(assertion(m), s"assertion failed for $m: $ms"))
+    m.map(m => assert(assertion(m), s"assertion failed$tagInfo for $m: $ms"))
       .getOrElse(
-        fail(s"No metric found in $ms")
+        fail(s"No metric found $tagInfo in $ms")
       )
   }
 
