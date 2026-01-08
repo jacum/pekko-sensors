@@ -2,7 +2,7 @@ import Dependencies._
 import Keys._
 import sbt.file
 
-lazy val scala2 = "2.13.18"
+lazy val scala2 = "2.13.16"
 lazy val scala3 = "3.3.7"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
