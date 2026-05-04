@@ -11,7 +11,7 @@ object Dependencies {
   }
 
   object Pekko {
-    val pekkoVersion = "1.4.0"
+    val pekkoVersion = "1.6.0"
 
     val actor            = "org.apache.pekko" %% "pekko-actor"             % pekkoVersion
     val typed            = "org.apache.pekko" %% "pekko-actor-typed"       % pekkoVersion
@@ -37,10 +37,10 @@ object Dependencies {
 
   object Prometheus {
     val PrometheusVersion = "1.4.3"
-    val hotspot        = "io.prometheus" % "prometheus-metrics-instrumentation-jvm"    % PrometheusVersion
-    val common         = "io.prometheus" % "prometheus-metrics-core"                   % PrometheusVersion
-    val exposition     = "io.prometheus" % "prometheus-metrics-exposition-textformats" % PrometheusVersion
-    val exporterCommon = "io.prometheus" % "prometheus-metrics-exporter-common"        % PrometheusVersion
+    val hotspot           = "io.prometheus" % "prometheus-metrics-instrumentation-jvm"    % PrometheusVersion
+    val common            = "io.prometheus" % "prometheus-metrics-core"                   % PrometheusVersion
+    val exposition        = "io.prometheus" % "prometheus-metrics-exposition-textformats" % PrometheusVersion
+    val exporterCommon    = "io.prometheus" % "prometheus-metrics-exporter-common"        % PrometheusVersion
 
     val jmx       = "io.prometheus.jmx" % "collector" % "1.5.0"
     val snakeYaml = "org.yaml"          % "snakeyaml" % "2.5"
