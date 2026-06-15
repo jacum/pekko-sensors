@@ -25,7 +25,7 @@ object Dependencies {
     val slf4j        = "org.apache.pekko" %% "pekko-slf4j"         % pekkoVersion
 
     val stream = "org.apache.pekko" %% "pekko-stream" % pekkoVersion
-    val scalaz = "org.scalaz"       %% "scalaz-core"  % "7.3.8"
+    val scalaz = "org.scalaz"       %% "scalaz-core"  % "7.3.9"
 
     val persistenceTck = "org.apache.pekko" %% "pekko-persistence-tck" % pekkoVersion % Test
     val streamTestKit  = "org.apache.pekko" %% "pekko-stream-testkit"  % pekkoVersion % Test
@@ -37,10 +37,10 @@ object Dependencies {
 
   object Prometheus {
     val PrometheusVersion = "1.4.3"
-    val hotspot        = "io.prometheus" % "prometheus-metrics-instrumentation-jvm"    % PrometheusVersion
-    val common         = "io.prometheus" % "prometheus-metrics-core"                   % PrometheusVersion
-    val exposition     = "io.prometheus" % "prometheus-metrics-exposition-textformats" % PrometheusVersion
-    val exporterCommon = "io.prometheus" % "prometheus-metrics-exporter-common"        % PrometheusVersion
+    val hotspot           = "io.prometheus" % "prometheus-metrics-instrumentation-jvm"    % PrometheusVersion
+    val common            = "io.prometheus" % "prometheus-metrics-core"                   % PrometheusVersion
+    val exposition        = "io.prometheus" % "prometheus-metrics-exposition-textformats" % PrometheusVersion
+    val exporterCommon    = "io.prometheus" % "prometheus-metrics-exporter-common"        % PrometheusVersion
 
     val jmx       = "io.prometheus.jmx" % "collector" % "1.5.0"
     val snakeYaml = "org.yaml"          % "snakeyaml" % "2.5"
