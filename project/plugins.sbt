@@ -8,7 +8,7 @@ addSbtPlugin("com.timushev.sbt" % "sbt-updates"          % "0.6.4")
 addSbtPlugin("org.scalameta"    % "sbt-scalafmt"         % "2.5.6")
 addSbtPlugin("org.xerial.sbt"   % "sbt-sonatype"         % "3.12.2")
 addSbtPlugin("com.github.sbt"   % "sbt-pgp"              % "2.3.1")
-addSbtPlugin("no.arktekk.sbt"   % "aether-deploy"        % "0.30.0")
+addSbtPlugin("no.arktekk.sbt"   % "aether-deploy"        % "0.31.0")
 addSbtPlugin("com.github.sbt"   % "sbt-release"          % "1.4.0")
 addSbtPlugin("org.scoverage"    % "sbt-scoverage"        % "2.4.3")
 
