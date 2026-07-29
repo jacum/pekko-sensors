@@ -1,0 +1,64 @@
+name: Release gitlab-package-registry to Sonatype
+
+# Temporary cross-repo release: jacum/gitlab-package-registry has no
+# Sonatype/GPG secrets of its own, so this workflow releases it using
+# this repo's SONATYPE_* / GPG_* secrets. Safe to delete after use.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+      # Passphrase for signing (sbt-pgp reads this)
+      PGP_PASSPHRASE: ${{ secrets.GPG_PASS }}
+
+    steps:
+      - name: Checkout gitlab-package-registry
+        uses: actions/checkout@v4
+        with:
+          repository: jacum/gitlab-package-registry
+          ref: master
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: sbt
+
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
+
+      - name: Import GPG private key
+        shell: bash
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          printf "%s" "${GPG_SECRET}" | gpg --batch --import
+          # reload agent to pick up allow-loopback-pinentry
+          gpgconf --kill gpg-agent || true
+        env:
+          GPG_SECRET: ${{ secrets.GPG_SECRET }}
+
+      - name: Configure Git identity for release
+        run: |
+          git config user.email "ci@users.noreply.github.com"
+          git config user.name "GitHub Actions Release Bot"
+
+      - name: Compile
+        run: sbt compile
+
+      - name: Release to Sonatype (bundle + upload + release)
+        run: sbt "release with-defaults"
