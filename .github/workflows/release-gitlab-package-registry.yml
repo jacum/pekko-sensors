@@ -61,4 +61,5 @@ jobs:
         run: sbt compile
 
       - name: Release to Sonatype (bundle + upload + release)
-        run: sbt "release with-defaults"
+        # not via sbt-release: it insists on a -SNAPSHOT current version
+        run: sbt clean sonatypeBundleClean publishSigned sonatypeCentralUpload sonatypeCentralRelease
