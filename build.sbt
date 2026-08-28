@@ -3,7 +3,7 @@ import Keys._
 import sbt.file
 
 lazy val scala2 = "2.13.18"
-lazy val scala3 = "3.3.7"
+lazy val scala3 = "3.3.8"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
         organization := "nl.pragmasoft",
